@@ -83,12 +83,10 @@ header {
   padding: 8px 16px;
   display: flex;
   align-items: center;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  gap: 4px 0;
   flex-shrink: 0;
-  scrollbar-width: none;
 }
-
-.wind-bar::-webkit-scrollbar { display: none; }
 
 .wstat {
   display: flex;
@@ -117,6 +115,26 @@ header {
   height: 28px;
   background: var(--border);
   flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .wind-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px 0;
+    padding: 8px 16px;
+  }
+
+  .wdiv { display: none; }
+
+  .wstat {
+    padding: 0 8px;
+    border-right: 1px solid var(--border);
+  }
+
+  /* pos 5 = Ráfagas (3er wstat), pos 11 = Temp. agua (6o wstat) */
+  .wstat:nth-child(5), .wstat:nth-child(11) { border-right: none; }
+  .wstat:first-child { padding-left: 8px; }
 }
 
 .warrow {
