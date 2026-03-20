@@ -56,3 +56,8 @@
   0%   { width: 0; }
   100% { width: 100%; }
 }
+
+#loader .love {
+  position: absolute;
+  bottom: 20px;
+}

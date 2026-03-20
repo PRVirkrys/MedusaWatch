@@ -93,4 +93,5 @@
   .fab          { display: flex; }
   .upd-info     { display: none; }
   .logo p       { display: none; }
+  .love         { bottom: 50px; }
 }
