@@ -73,7 +73,7 @@
   position: absolute;
   bottom: 16px;
   right: 16px;
-  z-index: 450;
+  z-index: 1002;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -107,10 +107,9 @@
 
   .fab {
     display: flex;
-    z-index: 402;
   }
 
-  .upd-info {
+ .upd-info {
     display: none;
   }
 
