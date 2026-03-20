@@ -107,6 +107,7 @@
 
   .fab {
     display: flex;
+    z-index: 402;
   }
 
   .upd-info {
