@@ -1,0 +1,141 @@
+/* ── Layout ──────────────────────────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+#map {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+/* ── Desktop side panel ──────────────────────────────────────────────────────── */
+
+.panel {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--ocean);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-head {
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* ── Legend ──────────────────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.leg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.leg-sub {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* ── Beach list ──────────────────────────────────────────────────────────────── */
+
+.beach-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+}
+
+.beach-scroll::-webkit-scrollbar { width: 3px; }
+.beach-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.blist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bitem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 11px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.bitem:hover,
+.bitem.active {
+  border-color: var(--accent);
+  background: var(--card2);
+}
+
+.bdot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.binfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.bname {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bzone {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.bpct {
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pct-safe   { color: var(--safe); }
+.pct-warn   { color: var(--warn); }
+.pct-danger { color: var(--danger); }

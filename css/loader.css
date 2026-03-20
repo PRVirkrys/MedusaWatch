@@ -1,0 +1,58 @@
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--deep);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: opacity 0.4s;
+}
+
+#loader.out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.jelly {
+  font-size: 48px;
+  animation: jfloat 2s ease-in-out infinite;
+}
+
+@keyframes jfloat {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%       { transform: translateY(-12px) rotate(6deg); }
+}
+
+.ltext {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--accent);
+}
+
+.lsub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.lbar {
+  width: 160px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lprog {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  animation: lprog 1.8s ease-in-out infinite;
+}
+
+@keyframes lprog {
+  0%   { width: 0; }
+  100% { width: 100%; }
+}

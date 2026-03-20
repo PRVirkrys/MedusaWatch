@@ -1,0 +1,56 @@
+.ppop {
+  min-width: 180px;
+}
+
+.ppop-inner {
+  padding: 12px 14px;
+  background: var(--ocean);
+  border-radius: 10px;
+}
+
+.ppop-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.ppop-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.ppop-row .pl {
+  color: var(--muted);
+}
+
+.ppop-bar {
+  height: 5px;
+  border-radius: 3px;
+  margin-top: 8px;
+}
+
+.ppop-maps-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(0, 200, 240, 0.1);
+  border: 1px solid rgba(0, 200, 240, 0.25);
+  border-radius: 7px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.ppop-maps-btn:hover {
+  background: rgba(0, 200, 240, 0.2);
+  border-color: var(--accent);
+}

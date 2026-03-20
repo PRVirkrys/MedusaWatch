@@ -1,0 +1,96 @@
+/* ── Bottom sheet (mobile only) ──────────────────────────────────────────────── */
+
+.bottom-sheet {
+  display: none;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 400;
+  background: var(--ocean);
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  transition: transform 0.3s ease;
+  max-height: 60vh;
+  flex-direction: column;
+}
+
+.bs-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bs-pill {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.bs-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.bs-tab {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.bs-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.bs-content {
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px 12px;
+}
+
+.bs-leg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── FAB (mobile only) ───────────────────────────────────────────────────────── */
+
+.fab {
+  display: none;
+  position: absolute;
+  bottom: 16px; right: 16px;
+  z-index: 450;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 200, 240, 0.35);
+}
+
+/* ── Breakpoint ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .main         { position: relative; }
+  .panel        { display: none; }
+  #map          { width: 100%; }
+  .bottom-sheet { display: flex; }
+  .fab          { display: flex; }
+  .upd-info     { display: none; }
+  .logo p       { display: none; }
+}

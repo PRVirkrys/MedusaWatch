@@ -1,0 +1,24 @@
+:root {
+  /* Backgrounds */
+  --ocean:   #0a1628;
+  --deep:    #060e1c;
+  --surface: #0d1f3c;
+  --card:    #0f2040;
+  --card2:   #132650;
+
+  /* Accent */
+  --accent:  #00c8f0;
+  --accent2: #00f0b0;
+
+  /* Risk levels */
+  --danger: #ff4055;
+  --warn:   #ffaa00;
+  --safe:   #22d46a;
+
+  /* Text */
+  --text:  #ddeeff;
+  --muted: #6a8faf;
+
+  /* Borders */
+  --border: rgba(0, 200, 240, 0.12);
+}

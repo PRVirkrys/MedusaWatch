@@ -1,0 +1,162 @@
+/*
+ * leaflet-overrides.css
+ * Custom overrides for Leaflet 1.9.x
+ * Loaded AFTER leaflet.css so every rule here wins.
+ *
+ * Sections:
+ *   1. Map container
+ *   2. Zoom controls
+ *   3. Attribution control
+ *   4. Scale control
+ *   5. Popups
+ *   6. Tooltips
+ *   7. Markers & icons
+ */
+
+/* ─── 1. MAP CONTAINER ──────────────────────────────────────────────────────── */
+
+.leaflet-container {
+  background: #05101e;
+  /* background visible before tiles load */
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ─── 2. ZOOM CONTROLS ──────────────────────────────────────────────────────── */
+
+.leaflet-bar {
+  border: 1px solid rgba(0, 200, 240, 0.18) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 9px !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  background: #0a1628;
+  color: #00c8f0;
+  border-bottom: 1px solid rgba(0, 200, 240, 0.12) !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 16px !important;
+  font-weight: 400;
+  transition: background 0.15s, color 0.15s;
+}
+
+.leaflet-bar a:hover {
+  background: #0d1f3c;
+  color: #00f0b0;
+}
+
+.leaflet-bar a:last-child {
+  border-bottom: none !important;
+}
+
+.leaflet-bar a.leaflet-disabled {
+  background: #060e1c;
+  color: #2a4a6a;
+  cursor: not-allowed;
+}
+
+/* ─── 3. ATTRIBUTION CONTROL ────────────────────────────────────────────────── */
+
+.leaflet-control-attribution {
+  background: rgba(6, 14, 28, 0.75) !important;
+  color: #3a5a7a !important;
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px 0 0 0 !important;
+  backdrop-filter: blur(4px);
+}
+
+.leaflet-control-attribution a {
+  color: #4a7a9a !important;
+  text-decoration: none;
+}
+
+.leaflet-control-attribution a:hover {
+  color: #00c8f0 !important;
+}
+
+/* ─── 4. SCALE CONTROL ──────────────────────────────────────────────────────── */
+
+.leaflet-control-scale-line {
+  background: rgba(6, 14, 28, 0.75);
+  border: 1px solid rgba(0, 200, 240, 0.2) !important;
+  border-top: none !important;
+  color: #6a8faf;
+  font-size: 9px;
+  padding: 1px 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* ─── 5. POPUPS ─────────────────────────────────────────────────────────────── */
+
+.leaflet-popup-content-wrapper {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  color: #999;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4;
+}
+
+/* Hide the triangle tip */
+.leaflet-popup-tip-container {
+  display: none !important;
+}
+
+/* Close button */
+.leaflet-popup-close-button {
+  color: #6a8faf !important;
+  font-size: 18px !important;
+  top: 6px !important;
+  right: 8px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 18px !important;
+  text-align: center;
+  transition: color 0.15s;
+}
+
+.leaflet-popup-close-button:hover {
+  color: #00c8f0 !important;
+  background: none !important;
+}
+
+/* ─── 6. TOOLTIPS ───────────────────────────────────────────────────────────── */
+
+.leaflet-tooltip {
+  background: #0a1628;
+  border: 1px solid rgba(0, 200, 240, 0.2);
+  border-radius: 6px;
+  color: #ddeeff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  padding: 4px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-tooltip-top::before,
+.leaflet-tooltip-bottom::before,
+.leaflet-tooltip-left::before,
+.leaflet-tooltip-right::before {
+  border-top-color: rgba(0, 200, 240, 0.2);
+}
+
+/* ─── 7. MARKERS & ICONS ────────────────────────────────────────────────────── */
+
+/* Remove default marker shadow */
+.leaflet-marker-shadow {
+  display: none;
+}
+
+/* Ensure div icons don't get unexpected backgrounds */
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
