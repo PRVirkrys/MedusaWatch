@@ -1,133 +1,193 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>MedusaWatch Mallorca</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="stylesheet" href="css/variables.css">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/loader.css">
-<link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/panel.css">
-<link rel="stylesheet" href="css/popup.css">
-<link rel="stylesheet" href="css/mobile.css">
-<link rel="stylesheet" href="css/leaflet-overrides.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</head>
-<body>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="jelly">🪼</div>
-  <div class="ltext">MEDUSAWATCH MALLORCA</div>
-  <div class="lsub">Obteniendo datos de viento...</div>
-  <div class="lbar"><div class="lprog"></div></div>
-</div>
-
-<!-- HEADER -->
-<header>
-  <div class="logo">
-    <div class="logo-ic">🪼</div>
-    <div>
-      <h1>MedusaWatch</h1>
-      <p>Mallorca · Tiempo real</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>MedusaWatch Mallorca</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/panel.css" />
+    <link rel="stylesheet" href="css/popup.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+    <link rel="stylesheet" href="css/leaflet-overrides.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="jelly">🪼</div>
+      <div class="ltext">MEDUSAWATCH MALLORCA</div>
+      <div class="lsub">Obteniendo datos de viento...</div>
+      <div class="lbar"><div class="lprog"></div></div>
+      <div class="lsub">Para tu viaje, Zabi 💙</div>
+      <div class="lsub">@ByPaulaRodas 💻✏️</div>
     </div>
-  </div>
-  <div class="hright">
-    <div class="upd-info">
-      <div id="updTime">Actualizando...</div>
-      <div style="font-size:9px;color:#4a6a8a;">Open-Meteo API</div>
-    </div>
-    <button class="btn-refresh" id="btnRefresh" onclick="loadData()">↻ Actualizar</button>
-  </div>
-</header>
 
-<!-- WIND BAR -->
-<div class="wind-bar">
-  <div class="wstat">
-    <span class="wlabel">Dirección</span>
-    <span class="wvalue"><span class="warrow" id="wArrow">↑</span> <span id="wDir">—</span></span>
-  </div>
-  <div class="wdiv"></div>
-  <div class="wstat">
-    <span class="wlabel">Velocidad</span>
-    <span class="wvalue" id="wSpeed">—</span>
-  </div>
-  <div class="wdiv"></div>
-  <div class="wstat">
-    <span class="wlabel">Ráfagas</span>
-    <span class="wvalue" id="wGusts">—</span>
-  </div>
-  <div class="wdiv"></div>
-  <div class="wstat">
-    <span class="wlabel">Riesgo global</span>
-    <span id="wRisk"><span class="rbadge r-medio">—</span></span>
-  </div>
-  <div class="wdiv"></div>
-  <div class="wstat">
-    <span class="wlabel">Seguras</span>
-    <span class="wvalue" id="wSafe">—</span>
-  </div>
-  <div class="wdiv"></div>
-  <div class="wstat">
-    <span class="wlabel">Temp. agua</span>
-    <span class="wvalue" id="wTemp">—</span>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-  <div id="map"></div>
-
-  <!-- DESKTOP PANEL -->
-  <div class="panel">
-    <div class="panel-head"><div class="sec-title">Leyenda de riesgo</div></div>
-    <div class="legend">
-      <div class="leg-item">
-        <div class="leg-dot" style="background:var(--safe)"></div>
-        <div><div>Bajo riesgo</div><div class="leg-sub">Viento en contra · Medusas improbables</div></div>
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <div class="logo-ic">🪼</div>
+        <div>
+          <h1>MedusaWatch</h1>
+          <p>Mallorca · Tiempo real</p>
+        </div>
       </div>
-      <div class="leg-item">
-        <div class="leg-dot" style="background:var(--warn)"></div>
-        <div><div>Riesgo moderado</div><div class="leg-sub">Viento lateral · Precaución</div></div>
+      <div class="hright">
+        <div class="upd-info">
+          <div id="updTime">Actualizando...</div>
+          <div style="font-size: 9px; color: #4a6a8a">Open-Meteo API</div>
+        </div>
+        <button class="btn-refresh" id="btnRefresh" onclick="loadData()">
+          ↻ Actualizar
+        </button>
       </div>
-      <div class="leg-item">
-        <div class="leg-dot" style="background:var(--danger)"></div>
-        <div><div>Alto riesgo</div><div class="leg-sub">Viento hacia costa · Evitar</div></div>
+    </header>
+
+    <!-- WIND BAR -->
+    <div class="wind-bar">
+      <div class="wstat">
+        <span class="wlabel">Dirección</span>
+        <span class="wvalue"
+          ><span class="warrow" id="wArrow">↑</span>
+          <span id="wDir">—</span></span
+        >
+      </div>
+      <div class="wdiv"></div>
+      <div class="wstat">
+        <span class="wlabel">Velocidad</span>
+        <span class="wvalue" id="wSpeed">—</span>
+      </div>
+      <div class="wdiv"></div>
+      <div class="wstat">
+        <span class="wlabel">Ráfagas</span>
+        <span class="wvalue" id="wGusts">—</span>
+      </div>
+      <div class="wdiv"></div>
+      <div class="wstat">
+        <span class="wlabel">Riesgo global</span>
+        <span id="wRisk"><span class="rbadge r-medio">—</span></span>
+      </div>
+      <div class="wdiv"></div>
+      <div class="wstat">
+        <span class="wlabel">Seguras</span>
+        <span class="wvalue" id="wSafe">—</span>
+      </div>
+      <div class="wdiv"></div>
+      <div class="wstat">
+        <span class="wlabel">Temp. agua</span>
+        <span class="wvalue" id="wTemp">—</span>
       </div>
     </div>
-    <div class="panel-head" style="padding-top:10px;"><div class="sec-title">Playas de Mallorca</div></div>
-    <div class="beach-scroll">
-      <div class="blist" id="beachList">
-        <div style="color:var(--muted);font-size:12px;padding:16px;text-align:center;">Cargando...</div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div id="map">
+        <div class="love">
+          <span>Para tu viaje, Zabi 💙</span><span class="love-sep">·</span><span>@ByPaulaRodas 💻✏️</span>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- MOBILE BOTTOM SHEET -->
-  <div class="bottom-sheet" id="bs">
-    <div class="bs-handle" onclick="toggleBS()"><div class="bs-pill"></div></div>
-    <div class="bs-tabs">
-      <div class="bs-tab active" id="tab-playas" onclick="switchTab('playas')">Playas</div>
-      <div class="bs-tab" id="tab-leyenda" onclick="switchTab('leyenda')">Leyenda</div>
-    </div>
-    <div class="bs-content" id="bsContent">
-      <div class="blist" id="beachListMobile">
-        <div style="color:var(--muted);font-size:12px;padding:16px;text-align:center;">Cargando...</div>
+      <!-- DESKTOP PANEL -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="sec-title">Leyenda de riesgo</div>
+        </div>
+        <div class="legend">
+          <div class="leg-item">
+            <div class="leg-dot" style="background: var(--safe)"></div>
+            <div>
+              <div>Bajo riesgo</div>
+              <div class="leg-sub">Viento en contra · Medusas improbables</div>
+            </div>
+          </div>
+          <div class="leg-item">
+            <div class="leg-dot" style="background: var(--warn)"></div>
+            <div>
+              <div>Riesgo moderado</div>
+              <div class="leg-sub">Viento lateral · Precaución</div>
+            </div>
+          </div>
+          <div class="leg-item">
+            <div class="leg-dot" style="background: var(--danger)"></div>
+            <div>
+              <div>Alto riesgo</div>
+              <div class="leg-sub">Viento hacia costa · Evitar</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-head" style="padding-top: 10px">
+          <div class="sec-title">Playas de Mallorca</div>
+        </div>
+        <div class="beach-scroll">
+          <div class="blist" id="beachList">
+            <div
+              style="
+                color: var(--muted);
+                font-size: 12px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              Cargando...
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- MOBILE BOTTOM SHEET -->
+      <div class="bottom-sheet" id="bs">
+        <div class="bs-handle" onclick="toggleBS()">
+          <div class="bs-pill"></div>
+        </div>
+        <div class="bs-tabs">
+          <div
+            class="bs-tab active"
+            id="tab-playas"
+            onclick="switchTab('playas')"
+          >
+            Playas
+          </div>
+          <div class="bs-tab" id="tab-leyenda" onclick="switchTab('leyenda')">
+            Leyenda
+          </div>
+        </div>
+        <div class="bs-content" id="bsContent">
+          <div class="blist" id="beachListMobile">
+            <div
+              style="
+                color: var(--muted);
+                font-size: 12px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              Cargando...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAB -->
+      <button class="fab" id="fab" onclick="toggleBS()">☰</button>
     </div>
-  </div>
 
-  <!-- FAB -->
-  <button class="fab" id="fab" onclick="toggleBS()">☰</button>
-</div>
-
-<script src="js/beaches.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/map.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/app.js"></script>
-</body>
+    <script src="js/beaches.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
