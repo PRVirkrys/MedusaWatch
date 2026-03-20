@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MedusaWatch Mallorca</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --ocean: #0a1628;
+  --deep: #060e1c;
+  --surface: #0d1f3c;
+  --card: #0f2040;
+  --card2: #132650;
+  --accent: #00c8f0;
+  --accent2: #00f0b0;
+  --danger: #ff4055;
+  --warn: #ffaa00;
+  --safe: #22d46a;
+  --text: #ddeeff;
+  --muted: #6a8faf;
+  --border: rgba(0,200,240,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'DM Sans', sans-serif; background: var(--deep); color: var(--text); display: flex; flex-direction: column; }
+
+/* LOADING */
+#loader {
+  position: fixed; inset: 0; background: var(--deep); z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  transition: opacity 0.4s;
+}
+#loader.out { opacity: 0; pointer-events: none; }
+.jelly { font-size: 48px; animation: jfloat 2s ease-in-out infinite; }
+@keyframes jfloat { 0%,100%{transform:translateY(0) rotate(-6deg)} 50%{transform:translateY(-12px) rotate(6deg)} }
+.ltext { font-family:'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--accent); }
+.lsub { font-size: 12px; color: var(--muted); }
+.lbar { width: 160px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.lprog { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); animation: lprog 1.8s ease-in-out infinite; }
+@keyframes lprog { 0%{width:0} 100%{width:100%} }
+
+/* HEADER */
+header {
+  background: var(--ocean);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; z-index: 500;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-ic {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.logo h1 { font-family:'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--accent); line-height:1; }
+.logo p { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.hright { display: flex; align-items: center; gap: 10px; }
+.upd-info { font-size: 10px; color: var(--muted); text-align: right; line-height: 1.4; }
+.btn-refresh {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; color: var(--deep); font-family:'DM Sans',sans-serif;
+  font-weight: 600; font-size: 12px; padding: 7px 13px;
+  border-radius: 7px; cursor: pointer; white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* WIND BAR */
+.wind-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto; flex-shrink: 0;
+  scrollbar-width: none;
+}
+.wind-bar::-webkit-scrollbar { display: none; }
+.wstat { display: flex; flex-direction: column; padding: 0 12px; white-space: nowrap; }
+.wstat:first-child { padding-left: 0; }
+.wlabel { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.wvalue { font-size: 14px; font-weight: 600; color: var(--accent); }
+.wdiv { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
+.rbadge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.r-alto { background: rgba(255,64,85,0.15); color: var(--danger); border: 1px solid rgba(255,64,85,0.3); }
+.r-medio { background: rgba(255,170,0,0.15); color: var(--warn); border: 1px solid rgba(255,170,0,0.3); }
+.r-bajo { background: rgba(34,212,106,0.15); color: var(--safe); border: 1px solid rgba(34,212,106,0.3); }
+.warrow { display: inline-block; font-size: 16px; transition: transform 0.8s ease; }
+
+/* MAIN AREA — desktop: side by side | mobile: stacked */
+.main { flex: 1; overflow: hidden; display: flex; flex-direction: row; }
+
+/* MAP */
+#map { flex: 1; height: 100%; min-height: 0; }
+.leaflet-container { background: #05101e; }
+
+/* PANEL */
+.panel {
+  width: 300px; flex-shrink: 0;
+  background: var(--ocean);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.panel-head {
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sec-title { font-family:'Bebas Neue',sans-serif; font-size: 12px; letter-spacing: 2px; color: var(--muted); }
+.legend { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.leg-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.leg-sub { font-size: 10px; color: var(--muted); }
+
+.beach-scroll { flex: 1; overflow-y: auto; padding: 8px 10px; }
+.beach-scroll::-webkit-scrollbar { width: 3px; }
+.beach-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.blist { display: flex; flex-direction: column; gap: 4px; }
+.bitem {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 9px; padding: 9px 11px;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.bitem:hover, .bitem.active { border-color: var(--accent); background: var(--card2); }
+.bdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.binfo { flex: 1; min-width: 0; }
+.bname { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bzone { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.bpct { font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.pct-safe { color: var(--safe); }
+.pct-warn { color: var(--warn); }
+.pct-danger { color: var(--danger); }
+
+/* BOTTOM SHEET — mobile only */
+.bottom-sheet {
+  display: none;
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 400;
+  background: var(--ocean);
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  transition: transform 0.3s ease;
+  max-height: 60vh;
+  flex-direction: column;
+}
+.bs-handle {
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px; cursor: pointer; flex-shrink: 0;
+}
+.bs-pill { width: 36px; height: 4px; background: var(--border); border-radius: 2px; }
+.bs-tabs {
+  display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.bs-tab {
+  flex: 1; padding: 8px; text-align: center;
+  font-size: 11px; font-weight: 500; cursor: pointer;
+  color: var(--muted); border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.bs-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.bs-content { overflow-y: auto; flex: 1; padding: 10px 12px; }
+.bs-leg { display: flex; flex-direction: column; gap: 8px; }
+
+/* FAB toggle — mobile only */
+.fab {
+  display: none;
+  position: absolute; bottom: 16px; right: 16px; z-index: 450;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; cursor: pointer; font-size: 20px;
+  align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,200,240,0.35);
+}
+
+/* POPUP */
+.ppop { min-width: 180px; }
+.ppop-inner { padding: 12px 14px; background: var(--ocean); border-radius: 10px; }
+.ppop-name { font-family:'Bebas Neue',sans-serif; font-size: 16px; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.ppop-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
+.ppop-row .pl { color: var(--muted); }
+.ppop-bar { height: 5px; border-radius: 3px; margin-top: 8px; }
+.leaflet-popup-content-wrapper { padding:0!important; background:transparent!important; border:none!important; box-shadow: 0 6px 24px rgba(0,0,0,0.6)!important; border-radius:10px!important; }
+.leaflet-popup-content { margin:0!important; }
+.leaflet-popup-tip-container { display:none; }
+
+/* SPIN */
+.spin { animation: spin 0.9s linear infinite; display: inline-block; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* ===== MOBILE BREAKPOINT ===== */
+@media (max-width: 700px) {
+  .main { position: relative; }
+  .panel { display: none; }
+  #map { width: 100%; }
+  .bottom-sheet { display: flex; }
+  .fab { display: flex; }
+  .upd-info { display: none; }
+  .logo p { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="jelly">🪼</div>
+  <div class="ltext">MEDUSAWATCH MALLORCA</div>
+  <div class="lsub">Obteniendo datos de viento...</div>
+  <div class="lbar"><div class="lprog"></div></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-ic">🪼</div>
+    <div>
+      <h1>MedusaWatch</h1>
+      <p>Mallorca · Tiempo real</p>
+    </div>
+  </div>
+  <div class="hright">
+    <div class="upd-info">
+      <div id="updTime">Actualizando...</div>
+      <div style="font-size:9px;color:#4a6a8a;">Open-Meteo API</div>
+    </div>
+    <button class="btn-refresh" id="btnRefresh" onclick="loadData()">↻ Actualizar</button>
+  </div>
+</header>
+
+<!-- WIND BAR -->
+<div class="wind-bar">
+  <div class="wstat">
+    <span class="wlabel">Dirección</span>
+    <span class="wvalue"><span class="warrow" id="wArrow">↑</span> <span id="wDir">—</span></span>
+  </div>
+  <div class="wdiv"></div>
+  <div class="wstat">
+    <span class="wlabel">Velocidad</span>
+    <span class="wvalue" id="wSpeed">—</span>
+  </div>
+  <div class="wdiv"></div>
+  <div class="wstat">
+    <span class="wlabel">Ráfagas</span>
+    <span class="wvalue" id="wGusts">—</span>
+  </div>
+  <div class="wdiv"></div>
+  <div class="wstat">
+    <span class="wlabel">Riesgo global</span>
+    <span id="wRisk"><span class="rbadge r-medio">—</span></span>
+  </div>
+  <div class="wdiv"></div>
+  <div class="wstat">
+    <span class="wlabel">Seguras</span>
+    <span class="wvalue" id="wSafe">—</span>
+  </div>
+  <div class="wdiv"></div>
+  <div class="wstat">
+    <span class="wlabel">Temp. agua</span>
+    <span class="wvalue" id="wTemp">—</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div id="map"></div>
+
+  <!-- DESKTOP PANEL -->
+  <div class="panel">
+    <div class="panel-head"><div class="sec-title">Leyenda de riesgo</div></div>
+    <div class="legend">
+      <div class="leg-item">
+        <div class="leg-dot" style="background:var(--safe)"></div>
+        <div><div>Bajo riesgo</div><div class="leg-sub">Viento en contra · Medusas improbables</div></div>
+      </div>
+      <div class="leg-item">
+        <div class="leg-dot" style="background:var(--warn)"></div>
+        <div><div>Riesgo moderado</div><div class="leg-sub">Viento lateral · Precaución</div></div>
+      </div>
+      <div class="leg-item">
+        <div class="leg-dot" style="background:var(--danger)"></div>
+        <div><div>Alto riesgo</div><div class="leg-sub">Viento hacia costa · Evitar</div></div>
+      </div>
+    </div>
+    <div class="panel-head" style="padding-top:10px;"><div class="sec-title">Playas de Mallorca</div></div>
+    <div class="beach-scroll">
+      <div class="blist" id="beachList">
+        <div style="color:var(--muted);font-size:12px;padding:16px;text-align:center;">Cargando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM SHEET -->
+  <div class="bottom-sheet" id="bs">
+    <div class="bs-handle" onclick="toggleBS()"><div class="bs-pill"></div></div>
+    <div class="bs-tabs">
+      <div class="bs-tab active" id="tab-playas" onclick="switchTab('playas')">Playas</div>
+      <div class="bs-tab" id="tab-leyenda" onclick="switchTab('leyenda')">Leyenda</div>
+    </div>
+    <div class="bs-content" id="bsContent">
+      <div class="blist" id="beachListMobile">
+        <div style="color:var(--muted);font-size:12px;padding:16px;text-align:center;">Cargando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab" onclick="toggleBS()">☰</button>
+</div>
+
+<script>
+const beaches = [
+  {name:"Playa de Palma",zone:"Sur",lat:39.520,lng:2.740,exp:[0,90,270]},
+  {name:"Can Pastilla",zone:"Sur",lat:39.525,lng:2.756,exp:[0,90,270]},
+  {name:"El Arenal",zone:"Sur",lat:39.498,lng:2.791,exp:[0,90,270]},
+  {name:"Cala Blava",zone:"Sur",lat:39.443,lng:2.751,exp:[135,180,225]},
+  {name:"Sa Ràpita",zone:"Sur",lat:39.370,lng:2.942,exp:[135,180,225]},
+  {name:"Es Trenc",zone:"Sur",lat:39.344,lng:2.979,exp:[135,180,225]},
+  {name:"Colonia de Sant Jordi",zone:"Sur",lat:39.316,lng:3.008,exp:[135,180,225]},
+  {name:"Cala Mondragó",zone:"Sureste",lat:39.342,lng:3.170,exp:[90,135,180]},
+  {name:"Cala d'Or",zone:"Sureste",lat:39.370,lng:3.232,exp:[90,135,180]},
+  {name:"Porto Cristo",zone:"Sureste",lat:39.534,lng:3.334,exp:[45,90,135]},
+  {name:"Cala Millor",zone:"Sureste",lat:39.589,lng:3.388,exp:[45,90,135]},
+  {name:"Sa Coma",zone:"Sureste",lat:39.600,lng:3.387,exp:[45,90,135]},
+  {name:"Cala Rajada",zone:"Este",lat:39.702,lng:3.459,exp:[45,90,135]},
+  {name:"Cala Agulla",zone:"Este",lat:39.714,lng:3.463,exp:[0,45,90]},
+  {name:"Cala Mesquida",zone:"Este",lat:39.740,lng:3.456,exp:[0,45,90]},
+  {name:"Playa de Muro",zone:"Noreste",lat:39.820,lng:3.100,exp:[0,315,270]},
+  {name:"Alcúdia",zone:"Noreste",lat:39.835,lng:3.123,exp:[0,315,270]},
+  {name:"Port de Pollença",zone:"Norte",lat:39.911,lng:3.082,exp:[315,0,45]},
+  {name:"Formentor",zone:"Norte",lat:39.953,lng:3.188,exp:[315,0,45]},
+  {name:"Cala Sant Vicenç",zone:"Norte",lat:39.903,lng:3.048,exp:[315,0,45]},
+  {name:"Port de Sóller",zone:"Noroeste",lat:39.796,lng:2.696,exp:[270,315,0]},
+  {name:"Cala Tuent",zone:"Noroeste",lat:39.847,lng:2.658,exp:[270,315,0]},
+  {name:"Sa Calobra",zone:"Noroeste",lat:39.851,lng:2.797,exp:[315,0,270]},
+  {name:"Sant Elm",zone:"Oeste",lat:39.583,lng:2.358,exp:[225,270,315]},
+  {name:"Camp de Mar",zone:"Oeste",lat:39.543,lng:2.452,exp:[225,270,315]},
+  {name:"Paguera",zone:"Oeste",lat:39.534,lng:2.455,exp:[180,225,270]},
+  {name:"Santa Ponça",zone:"Suroeste",lat:39.515,lng:2.494,exp:[180,225,270]},
+  {name:"Magaluf",zone:"Suroeste",lat:39.505,lng:2.528,exp:[180,225,270]},
+  {name:"Palmanova",zone:"Suroeste",lat:39.509,lng:2.553,exp:[180,225,270]},
+  {name:"Illetas",zone:"Suroeste",lat:39.530,lng:2.598,exp:[180,225,270]},
+];
+
+let map, markers = [], curDeg = 0, curSpeed = 0;
+let bsOpen = false, curTab = 'playas';
+
+function initMap() {
+  map = L.map('map', {center:[39.62,2.95], zoom:10, zoomControl:true, attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:18}).addTo(map);
+}
+
+function calcRisk(beach, deg, speed) {
+  let minD = 360;
+  for (const e of beach.exp) {
+    let d = Math.abs(deg - e);
+    if (d > 180) d = 360 - d;
+    if (d < minD) minD = d;
+  }
+  const sf = Math.min(speed / 20, 1);
+  let pct = minD < 45 ? 70 + sf*25 : minD < 90 ? 35 + sf*25 : 5 + sf*20;
+  pct = Math.min(Math.round(pct), 98);
+  let level, color, hex;
+  if (pct >= 60) { level="Alto"; color="danger"; hex="#ff4055"; }
+  else if (pct >= 30) { level="Moderado"; color="warn"; hex="#ffaa00"; }
+  else { level="Bajo"; color="safe"; hex="#22d46a"; }
+  return {pct, level, color, hex};
+}
+
+function compass(deg) {
+  return ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"][Math.round(deg/22.5)%16];
+}
+
+function updateMarkers(bd) {
+  markers.forEach(m => map.removeLayer(m)); markers = [];
+  bd.forEach(({beach, risk}, i) => {
+    const html = `<div style="position:relative;width:22px;height:22px;">
+      <div style="position:absolute;inset:0;background:${risk.hex};border-radius:50%;animation:bp 2s ${(i%5)*0.4}s infinite;opacity:0.2;"></div>
+      <div style="position:absolute;top:4px;left:4px;width:14px;height:14px;background:${risk.hex};border-radius:50%;border:2.5px solid rgba(255,255,255,0.9);"></div>
+    </div>
+    <style>@keyframes bp{0%,100%{transform:scale(1);opacity:0.2}50%{transform:scale(2.4);opacity:0}}</style>`;
+    const icon = L.divIcon({html, className:'', iconSize:[22,22], iconAnchor:[11,11]});
+    const m = L.marker([beach.lat, beach.lng], {icon})
+      .bindPopup(`<div class="ppop-inner">
+        <div class="ppop-name">${beach.name}</div>
+        <div class="ppop-row"><span class="pl">Zona</span><span>${beach.zone}</span></div>
+        <div class="ppop-row"><span class="pl">Riesgo</span><span style="color:${risk.hex};font-weight:600">${risk.level}</span></div>
+        <div class="ppop-row"><span class="pl">Probabilidad</span><span style="color:${risk.hex};font-weight:600">${risk.pct}%</span></div>
+        <div class="ppop-row"><span class="pl">Viento</span><span>${curSpeed} km/h ${compass(curDeg)}</span></div>
+        <div class="ppop-bar" style="background:linear-gradient(90deg,${risk.hex} ${risk.pct}%,rgba(255,255,255,0.08) ${risk.pct}%)"></div>
+      </div>`, {className:'ppop'}).addTo(map);
+    markers.push(m);
+  });
+}
+
+function buildList(bd, elId) {
+  document.getElementById(elId).innerHTML = bd.map(({beach,risk},i) =>
+    `<div class="bitem" onclick="focusBeach(${i})" id="${elId}-${i}">
+      <div class="bdot" style="background:${risk.hex}"></div>
+      <div class="binfo">
+        <div class="bname">${beach.name}</div>
+        <div class="bzone">${beach.zone}</div>
+      </div>
+      <div class="bpct pct-${risk.color}">${risk.pct}%</div>
+    </div>`
+  ).join('');
+}
+
+function focusBeach(i) {
+  ['beachList','beachListMobile'].forEach(id => {
+    document.querySelectorAll(`#${id} .bitem`).forEach(el => el.classList.remove('active'));
+    document.getElementById(`${id}-${i}`)?.classList.add('active');
+  });
+  map.flyTo([beaches[i].lat, beaches[i].lng], 13, {duration:0.8});
+  markers[i]?.openPopup();
+  if (bsOpen) collapseBS();
+}
+
+// Bottom sheet
+const bs = document.getElementById('bs');
+function toggleBS() {
+  bsOpen = !bsOpen;
+  bs.style.transform = bsOpen ? 'translateY(0)' : 'translateY(calc(100% - 44px))';
+  document.getElementById('fab').textContent = bsOpen ? '✕' : '☰';
+}
+function collapseBS() { bsOpen = false; bs.style.transform = 'translateY(calc(100% - 44px))'; document.getElementById('fab').textContent = '☰'; }
+
+function switchTab(tab) {
+  curTab = tab;
+  document.getElementById('tab-playas').classList.toggle('active', tab==='playas');
+  document.getElementById('tab-leyenda').classList.toggle('active', tab==='leyenda');
+  const c = document.getElementById('bsContent');
+  if (tab === 'playas') {
+    c.innerHTML = `<div class="blist" id="beachListMobile"></div>`;
+    if (window._lastBD) buildList(window._lastBD, 'beachListMobile');
+  } else {
+    c.innerHTML = `<div class="bs-leg">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--safe)"></div><div><div style="font-size:13px">Bajo riesgo</div><div class="leg-sub">Viento en contra · Medusas improbables</div></div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--warn)"></div><div><div style="font-size:13px">Riesgo moderado</div><div class="leg-sub">Viento lateral · Precaución recomendada</div></div></div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--danger)"></div><div><div style="font-size:13px">Alto riesgo</div><div class="leg-sub">Viento hacia costa · Evitar la zona</div></div></div>
+      <div style="margin-top:12px;padding:10px;background:var(--card);border-radius:8px;font-size:11px;color:var(--muted);line-height:1.6">
+        El riesgo se calcula según la dirección del viento relativa a la orientación de cada playa. A mayor velocidad del viento, mayor arrastre de medusas hacia la costa.
+      </div>
+    </div>`;
+  }
+}
+
+// Init bottom sheet collapsed
+bs.style.transform = 'translateY(calc(100% - 44px))';
+
+async function loadData() {
+  const btn = document.getElementById('btnRefresh');
+  btn.disabled = true; btn.innerHTML = '<span class="spin">↻</span>';
+  try {
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=39.62&longitude=2.95&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=sea_surface_temperature&timezone=Europe%2FMadrid&forecast_days=1');
+    const d = await r.json();
+    curSpeed = d.current.wind_speed_10m;
+    curDeg = d.current.wind_direction_10m;
+    const gusts = d.current.wind_gusts_10m;
+    const wt = d.hourly?.sea_surface_temperature?.[0];
+
+    document.getElementById('wDir').textContent = `${compass(curDeg)} (${curDeg}°)`;
+    document.getElementById('wSpeed').textContent = `${curSpeed} km/h`;
+    document.getElementById('wGusts').textContent = `${gusts} km/h`;
+    document.getElementById('wTemp').textContent = wt ? `${wt.toFixed(1)}°C` : '~18°C';
+    document.getElementById('wArrow').style.transform = `rotate(${curDeg}deg)`;
+
+    const bd = beaches.map(b => ({beach:b, risk:calcRisk(b, curDeg, curSpeed)}));
+    window._lastBD = bd;
+
+    const safe = bd.filter(b => b.risk.color==='safe').length;
+    const avg = bd.reduce((s,b) => s+b.risk.pct, 0) / bd.length;
+    document.getElementById('wSafe').textContent = `${safe}/${beaches.length}`;
+
+    let rc, rt;
+    if (avg >= 60) { rc='r-alto'; rt='🔴 Alto riesgo'; }
+    else if (avg >= 30) { rc='r-medio'; rt='🟡 Moderado'; }
+    else { rc='r-bajo'; rt='🟢 Bajo riesgo'; }
+    document.getElementById('wRisk').innerHTML = `<span class="rbadge ${rc}">${rt}</span>`;
+    document.getElementById('updTime').textContent = new Date().toLocaleTimeString('es-ES');
+
+    updateMarkers(bd);
+    buildList(bd, 'beachList');
+    if (curTab === 'playas') {
+      const el = document.getElementById('beachListMobile');
+      if (el) buildList(bd, 'beachListMobile');
+    }
+
+    document.getElementById('loader').classList.add('out');
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loader').classList.add('out');
+    document.getElementById('updTime').textContent = 'Error';
+  }
+  btn.disabled = false; btn.innerHTML = '↻ Actualizar';
+}
+
+window.addEventListener('load', () => { initMap(); loadData(); setInterval(loadData, 600000); });
+</script>
+</body>
+</html>
