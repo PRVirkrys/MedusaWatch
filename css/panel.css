@@ -69,6 +69,20 @@
   color: var(--muted);
 }
 
+.leg-title {
+  font-size: 13px;
+}
+
+.leg-info {
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--card);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 /* ── Beach list ──────────────────────────────────────────────────────────────── */
 
 .beach-scroll {

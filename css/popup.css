@@ -54,3 +54,46 @@
   background: rgba(0, 200, 240, 0.2);
   border-color: var(--accent);
 }
+
+.custom-marker-icon {
+  background: transparent;
+  border: 0;
+}
+
+.marker-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+
+.marker-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: bp 2s infinite;
+}
+
+.marker-dot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.9);
+}
+
+@keyframes bp {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}

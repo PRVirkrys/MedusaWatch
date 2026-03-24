@@ -1,42 +1,161 @@
-let map, markers = [];
+let map;
+let markers = [];
 
 function initMap() {
-  map = L.map('map', {center:[39.62,2.95], zoom:10, zoomControl:true, attributionControl:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:18}).addTo(map);
+  map = L.map("map", {
+    center: [39.62, 2.95],
+    zoom: 10,
+    zoomControl: true,
+    attributionControl: false,
+  });
+
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    maxZoom: 18,
+  }).addTo(map);
+}
+
+function clearMarkers() {
+  markers.forEach((marker) => map.removeLayer(marker));
+  markers = [];
+}
+
+function createPulseIcon(riskHex, delayIndex) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "marker-wrap";
+
+  const pulse = document.createElement("div");
+  pulse.className = "marker-pulse";
+  pulse.style.background = riskHex;
+  pulse.style.animationDelay = `${(delayIndex % 5) * 0.4}s`;
+
+  const dot = document.createElement("div");
+  dot.className = "marker-dot";
+  dot.style.background = riskHex;
+
+  wrapper.appendChild(pulse);
+  wrapper.appendChild(dot);
+
+  return L.divIcon({
+    html: wrapper,
+    className: "custom-marker-icon",
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
+function createPopupRow(labelText, valueNodeOrText) {
+  const row = document.createElement("div");
+  row.className = "ppop-row";
+
+  const label = document.createElement("span");
+  label.className = "pl";
+  label.textContent = labelText;
+
+  const value = document.createElement("span");
+
+  if (valueNodeOrText instanceof Node) {
+    value.appendChild(valueNodeOrText);
+  } else {
+    value.textContent = valueNodeOrText;
+  }
+
+  row.appendChild(label);
+  row.appendChild(value);
+
+  return row;
+}
+
+function createPopupContent(beach, risk) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "ppop-inner";
+
+  const name = document.createElement("div");
+  name.className = "ppop-name";
+  name.textContent = beach.name;
+
+  const riskValue = document.createElement("span");
+  riskValue.textContent = risk.level;
+  riskValue.style.color = risk.hex;
+  riskValue.style.fontWeight = "600";
+
+  const pctValue = document.createElement("span");
+  pctValue.textContent = `${risk.pct}%`;
+  pctValue.style.color = risk.hex;
+  pctValue.style.fontWeight = "600";
+
+  const windText = `${curSpeed} km/h ${compass(curDeg)}`;
+
+  const bar = document.createElement("div");
+  bar.className = "ppop-bar";
+  bar.style.background = `linear-gradient(90deg, ${risk.hex} ${risk.pct}%, rgba(255,255,255,0.08) ${risk.pct}%)`;
+
+  const mapsBtn = document.createElement("a");
+  mapsBtn.className = "ppop-maps-btn";
+  mapsBtn.href = `https://www.google.com/maps?q=${beach.lat},${beach.lng}`;
+  mapsBtn.target = "_blank";
+  mapsBtn.rel = "noopener";
+
+  const mapsIcon = document.createElement("span");
+  mapsIcon.textContent = "📍";
+
+  const mapsText = document.createTextNode(" Ver en Maps");
+
+  mapsBtn.appendChild(mapsIcon);
+  mapsBtn.appendChild(mapsText);
+
+  wrapper.appendChild(name);
+  wrapper.appendChild(createPopupRow("Zona", beach.zone));
+  wrapper.appendChild(createPopupRow("Riesgo", riskValue));
+  wrapper.appendChild(createPopupRow("Probabilidad", pctValue));
+  wrapper.appendChild(createPopupRow("Viento", windText));
+  wrapper.appendChild(bar);
+  wrapper.appendChild(mapsBtn);
+
+  return wrapper;
 }
 
 function updateMarkers(bd) {
-  markers.forEach(m => map.removeLayer(m));
-  markers = [];
-  bd.forEach(({beach, risk}, i) => {
-    const html = `<div style="position:relative;width:22px;height:22px;">
-      <div style="position:absolute;inset:0;background:${risk.hex};border-radius:50%;animation:bp 2s ${(i%5)*0.4}s infinite;opacity:0.2;"></div>
-      <div style="position:absolute;top:4px;left:4px;width:14px;height:14px;background:${risk.hex};border-radius:50%;border:2.5px solid rgba(255,255,255,0.9);"></div>
-    </div>
-    <style>@keyframes bp{0%,100%{transform:scale(1);opacity:0.2}50%{transform:scale(2.4);opacity:0}}</style>`;
-    const icon = L.divIcon({html, className:'', iconSize:[22,22], iconAnchor:[11,11]});
-    const m = L.marker([beach.lat, beach.lng], {icon})
-      .bindPopup(`<div class="ppop-inner">
-        <div class="ppop-name">${beach.name}</div>
-        <div class="ppop-row"><span class="pl">Zona</span><span>${beach.zone}</span></div>
-        <div class="ppop-row"><span class="pl">Riesgo</span><span style="color:${risk.hex};font-weight:600">${risk.level}</span></div>
-        <div class="ppop-row"><span class="pl">Probabilidad</span><span style="color:${risk.hex};font-weight:600">${risk.pct}%</span></div>
-        <div class="ppop-row"><span class="pl">Viento</span><span>${curSpeed} km/h ${compass(curDeg)}</span></div>
-        <div class="ppop-bar" style="background:linear-gradient(90deg,${risk.hex} ${risk.pct}%,rgba(255,255,255,0.08) ${risk.pct}%)"></div>
-        <a class="ppop-maps-btn" href="https://www.google.com/maps?q=${beach.lat},${beach.lng}" target="_blank" rel="noopener">
-          <span>📍</span> Ver en Maps
-        </a>
-      </div>`, {className:'ppop'}).addTo(map);
-    markers.push(m);
+  clearMarkers();
+
+  bd.forEach(({ beach, risk }, i) => {
+    const icon = createPulseIcon(risk.hex, i);
+
+    const marker = L.marker([beach.lat, beach.lng], { icon })
+      .bindPopup(createPopupContent(beach, risk), { className: "ppop" })
+      .addTo(map);
+
+    markers.push(marker);
+  });
+}
+
+function setActiveBeachItem(i) {
+  ["beachList", "beachListMobile"].forEach((id) => {
+    const container = document.getElementById(id);
+    if (!container) return;
+
+    container.querySelectorAll(".bitem").forEach((el) => {
+      el.classList.remove("active");
+    });
+
+    const activeItem = document.getElementById(`${id}-${i}`);
+    if (activeItem) {
+      activeItem.classList.add("active");
+    }
   });
 }
 
 function focusBeach(i) {
-  ['beachList','beachListMobile'].forEach(id => {
-    document.querySelectorAll(`#${id} .bitem`).forEach(el => el.classList.remove('active'));
-    document.getElementById(`${id}-${i}`)?.classList.add('active');
+  setActiveBeachItem(i);
+
+  map.flyTo([beaches[i].lat, beaches[i].lng], 13, {
+    duration: 0.8,
   });
-  map.flyTo([beaches[i].lat, beaches[i].lng], 13, {duration:0.8});
-  markers[i]?.openPopup();
-  if (bsOpen) collapseBS();
+
+  if (markers[i]) {
+    markers[i].openPopup();
+  }
+
+  if (bsOpen) {
+    collapseBS();
+  }
 }
