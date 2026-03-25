@@ -48,6 +48,120 @@ function switchTab(tab) {
   }
 }
 
+function openMapSearch() {
+  document.getElementById("fabSearch").style.display = "none";
+  document.getElementById("mapSearch").classList.add("open");
+  document.getElementById("searchMobile").focus();
+}
+
+function closeMapSearch() {
+  document.getElementById("mapSearch").classList.remove("open");
+  const searchMobile = document.getElementById("searchMobile");
+  searchMobile.value = "";
+  searchMobile.blur();
+  document.getElementById("mapSearchResults").replaceChildren();
+  document.getElementById("fabSearch").style.display = "";
+}
+
+function updateMapSearchResults(query) {
+  const container = document.getElementById("mapSearchResults");
+  if (!container || !window._lastBD) return;
+
+  const q = query.trim().toLowerCase();
+  container.replaceChildren();
+
+  if (!q) return;
+
+  const filtered = window._lastBD.filter(({ beach }) =>
+    beach.name.toLowerCase().includes(q)
+  );
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "msr-empty";
+    empty.textContent = "Sin resultados";
+    container.appendChild(empty);
+    return;
+  }
+
+  filtered.slice(0, 8).forEach((beachData) => {
+    const originalIndex = window._lastBD.indexOf(beachData);
+    const { beach, risk } = beachData;
+
+    const item = document.createElement("div");
+    item.className = "msr-item";
+    item.addEventListener("click", () => {
+      focusBeach(originalIndex);
+      closeMapSearch();
+    });
+
+    const dot = document.createElement("div");
+    dot.className = "msr-dot";
+    dot.style.background = risk.hex;
+
+    const info = document.createElement("div");
+    info.className = "msr-info";
+
+    const name = document.createElement("div");
+    name.className = "msr-name";
+    name.textContent = beach.name;
+
+    const zone = document.createElement("div");
+    zone.className = "msr-zone";
+    zone.textContent = beach.zone;
+
+    info.appendChild(name);
+    info.appendChild(zone);
+    item.appendChild(dot);
+    item.appendChild(info);
+    container.appendChild(item);
+  });
+}
+
+const _mapSearch = document.getElementById("mapSearch");
+if (_mapSearch) {
+  _mapSearch.addEventListener("touchstart", (e) => e.stopPropagation(), { passive: true });
+  _mapSearch.addEventListener("touchmove", (e) => {
+    e.stopPropagation();
+    document.getElementById("searchMobile").blur();
+  }, { passive: true });
+}
+
+document.addEventListener("click", (e) => {
+  const mapSearch = document.getElementById("mapSearch");
+  const fabSearch = document.getElementById("fabSearch");
+  if (mapSearch && mapSearch.classList.contains("open")) {
+    if (!mapSearch.contains(e.target) && !fabSearch.contains(e.target)) {
+      closeMapSearch();
+    }
+  }
+});
+
+function filterBeaches(query, elId) {
+  if (!window._lastBD) return;
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? window._lastBD.filter(({ beach }) => beach.name.toLowerCase().includes(q))
+    : window._lastBD;
+
+  const container = document.getElementById(elId);
+  if (!container) return;
+  container.replaceChildren();
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("div");
+    empty.style.cssText = "color: var(--muted); font-size: 12px; padding: 16px; text-align: center;";
+    empty.textContent = "Sin resultados";
+    container.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach((beachData) => {
+    const originalIndex = window._lastBD.indexOf(beachData);
+    container.appendChild(createBeachItem(beachData, originalIndex, elId));
+  });
+}
+
 function createLegendItem(colorVar, title, subtitle) {
   const legItem = document.createElement("div");
   legItem.className = "leg-item";
