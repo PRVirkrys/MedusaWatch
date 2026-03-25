@@ -242,6 +242,12 @@ if (_forecastPanel) {
   _forecastPanel.addEventListener("touchmove", (e) => e.stopPropagation());
 }
 
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 700 && forecastPanelOpen) {
+    closeForecastPanel();
+  }
+});
+
 document.addEventListener("click", (e) => {
   const mapSearch = document.getElementById("mapSearch");
   const fabSearch = document.getElementById("fabSearch");

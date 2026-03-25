@@ -171,8 +171,10 @@
   gap: 6px;
 }
 
-.forecast-panel.open {
-  display: flex;
+@media (max-width: 700px) {
+  .forecast-panel.open {
+    display: flex;
+  }
 }
 
 .fp-end-label {
