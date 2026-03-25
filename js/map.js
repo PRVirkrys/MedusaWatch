@@ -165,15 +165,17 @@ function setActiveBeachItem(i) {
 function focusBeach(i) {
   setActiveBeachItem(i);
 
-  map.flyTo([beaches[i].lat, beaches[i].lng], 13, {
-    duration: 0.8,
-  });
-
-  if (markers[i]) {
-    markers[i].openPopup();
-  }
-
   if (bsOpen) {
     collapseBS();
   }
+
+  map.once("moveend", () => {
+    if (markers[i]) {
+      markers[i].openPopup();
+    }
+  });
+
+  map.flyTo([beaches[i].lat, beaches[i].lng], 13, {
+    duration: 0.8,
+  });
 }
