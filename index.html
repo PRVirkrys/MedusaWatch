@@ -138,6 +138,16 @@
             </div>
           </div>
         </div>
+        <div class="ts-bar">
+          <div class="ts-row">
+            <span class="ts-icon">🕐</span>
+            <span class="ts-label">Ahora</span>
+          </div>
+          <input type="range" class="ts-input" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
+          <div class="ts-ticks">
+            <span>Ahora</span><span>+6h</span><span>+12h</span><span>+18h</span><span>+24h</span>
+          </div>
+        </div>
         <div class="panel-head" style="padding-top: 10px">
           <div class="sec-title">Playas de Mallorca</div>
         </div>
@@ -164,6 +174,13 @@
       <div class="bottom-sheet" id="bs">
         <div class="bs-handle" onclick="toggleBS()">
           <div class="bs-pill"></div>
+        </div>
+        <div class="ts-bar ts-bar-mobile">
+          <div class="ts-row">
+            <span class="ts-icon">🕐</span>
+            <span class="ts-label">Ahora</span>
+          </div>
+          <input type="range" class="ts-input" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
         </div>
         <div class="bs-tabs">
           <div

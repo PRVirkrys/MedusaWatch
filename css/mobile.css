@@ -126,6 +126,16 @@
   text-align: center;
 }
 
+/* ── Time slider mobile overrides ────────────────────────────────────────────── */
+
+.ts-bar-mobile {
+  padding: 8px 14px 32px;
+}
+
+.ts-bar-mobile .ts-ticks {
+  display: none;
+}
+
 /* ── Bottom sheet (mobile only) ──────────────────────────────────────────────── */
 
 .bottom-sheet {

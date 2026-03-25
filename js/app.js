@@ -10,59 +10,54 @@ async function loadData() {
   btn.replaceChildren(spinSpan);
   try {
     const r = await fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=39.62&longitude=2.95&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=sea_surface_temperature&timezone=Europe%2FMadrid&forecast_days=1",
+      "https://api.open-meteo.com/v1/forecast?latitude=39.62&longitude=2.95&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,sea_surface_temperature&timezone=Europe%2FMadrid&forecast_days=2",
     );
     const d = await r.json();
-    curSpeed = d.current.wind_speed_10m;
-    curDeg = d.current.wind_direction_10m;
-    const gusts = d.current.wind_gusts_10m;
-    const wt = d.hourly?.sea_surface_temperature?.[0];
 
-    document.getElementById("wDir").textContent =
-      `${compass(curDeg)} (${curDeg}°)`;
-    document.getElementById("wSpeed").textContent = `${curSpeed} km/h`;
-    document.getElementById("wGusts").textContent = `${gusts} km/h`;
+    const wt = d.hourly?.sea_surface_temperature?.[0];
     document.getElementById("wTemp").textContent = wt
       ? `${wt.toFixed(1)}°C`
       : "~18°C";
-    document.getElementById("wArrow").style.transform =
-      `rotate(${curDeg + 180}deg)`;
 
-    const bd = beaches.map((b) => ({
-      beach: b,
-      risk: calcRisk(b, curDeg, curSpeed),
-    }));
-    window._lastBD = bd;
+    // Find the index in the hourly array that matches the current hour
+    const now = new Date();
+    const hourlyTimes = d.hourly.time;
+    let currentHourIdx = hourlyTimes.findIndex((t) => {
+      const h = new Date(t);
+      return (
+        h.getFullYear() === now.getFullYear() &&
+        h.getMonth() === now.getMonth() &&
+        h.getDate() === now.getDate() &&
+        h.getHours() === now.getHours()
+      );
+    });
+    if (currentHourIdx === -1) currentHourIdx = 0;
 
-    const safe = bd.filter((b) => b.risk.color === "safe").length;
-    const avg = bd.reduce((s, b) => s + b.risk.pct, 0) / bd.length;
-    document.getElementById("wSafe").textContent = `${safe}/${beaches.length}`;
-
-    let rc, rt;
-    if (avg >= 60) {
-      rc = "r-alto";
-      rt = "🔴 Alto riesgo";
-    } else if (avg >= 30) {
-      rc = "r-medio";
-      rt = "🟡 Moderado";
-    } else {
-      rc = "r-bajo";
-      rt = "🟢 Bajo riesgo";
+    // Pre-compute beach risks for each of the next 24 hours
+    window._forecast = [];
+    for (let i = 0; i < 24; i++) {
+      const idx = currentHourIdx + i;
+      if (idx >= hourlyTimes.length) break;
+      const snapDeg = d.hourly.wind_direction_10m[idx];
+      const snapSpeed = d.hourly.wind_speed_10m[idx];
+      window._forecast.push({
+        time: new Date(hourlyTimes[idx]),
+        speed: snapSpeed,
+        deg: snapDeg,
+        gusts: d.hourly.wind_gusts_10m[idx],
+        bd: beaches.map((b) => ({ beach: b, risk: calcRisk(b, snapDeg, snapSpeed) })),
+      });
     }
-    const badge = document.createElement("span");
-    badge.className = `rbadge ${rc}`;
-    badge.textContent = rt;
-    document.getElementById("wRisk").replaceChildren(badge);
+
+    // Full marker recreate on every data load
+    updateMarkers(window._forecast[0].bd);
+
+    // Apply current hour to UI and reset slider
+    applyForecastHour(0);
+    document.querySelectorAll(".ts-input").forEach((el) => (el.value = 0));
+
     document.getElementById("updTime").textContent =
       new Date().toLocaleTimeString("es-ES");
-
-    updateMarkers(bd);
-    buildList(bd, "beachList");
-    if (curTab === "playas") {
-      const el = document.getElementById("beachListMobile");
-      if (el) buildList(bd, "beachListMobile");
-    }
-
     document.getElementById("loader").classList.add("out");
   } catch (e) {
     console.error(e);

@@ -113,6 +113,76 @@
   border-color: var(--accent);
 }
 
+/* ── Time slider ─────────────────────────────────────────────────────────────── */
+
+.ts-bar {
+  padding: 10px 14px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.ts-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.ts-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.ts-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  flex: 1;
+}
+
+.ts-input {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+  display: block;
+}
+
+.ts-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 200, 240, 0.5);
+}
+
+.ts-input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 200, 240, 0.5);
+}
+
+.ts-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 9px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.2px;
+}
+
 /* ── Beach list ──────────────────────────────────────────────────────────────── */
 
 .beach-scroll {

@@ -1,6 +1,62 @@
 let bsOpen = false;
 let curTab = "playas";
 
+function applyForecastHour(offset) {
+  if (!window._forecast || !window._forecast[offset]) return;
+  const snap = window._forecast[offset];
+
+  // Keep globals in sync so popups show the right wind
+  curDeg = snap.deg;
+  curSpeed = snap.speed;
+
+  // Wind bar
+  document.getElementById("wDir").textContent = `${compass(snap.deg)} (${snap.deg}°)`;
+  document.getElementById("wSpeed").textContent = `${snap.speed} km/h`;
+  document.getElementById("wGusts").textContent = `${snap.gusts} km/h`;
+  document.getElementById("wArrow").style.transform = `rotate(${snap.deg + 180}deg)`;
+
+  // Global risk badge + safe count
+  const bd = snap.bd;
+  const safe = bd.filter((b) => b.risk.color === "safe").length;
+  const avg = bd.reduce((s, b) => s + b.risk.pct, 0) / bd.length;
+  document.getElementById("wSafe").textContent = `${safe}/${beaches.length}`;
+
+  let rc, rt;
+  if (avg >= 60) { rc = "r-alto"; rt = "🔴 Alto riesgo"; }
+  else if (avg >= 30) { rc = "r-medio"; rt = "🟡 Moderado"; }
+  else { rc = "r-bajo"; rt = "🟢 Bajo riesgo"; }
+  const badge = document.createElement("span");
+  badge.className = `rbadge ${rc}`;
+  badge.textContent = rt;
+  document.getElementById("wRisk").replaceChildren(badge);
+
+  // Update marker colors in-place (fast, no recreate)
+  updateMarkerColors(bd);
+
+  // Beach lists
+  window._lastBD = bd;
+  buildList(bd, "beachList");
+  if (curTab === "playas") {
+    const el = document.getElementById("beachListMobile");
+    if (el) buildList(bd, "beachListMobile");
+  }
+
+  // Slider label
+  const isNow = offset === 0;
+  let labelText;
+  if (isNow) {
+    labelText = "Ahora";
+  } else {
+    const today = new Date();
+    const isToday = snap.time.toDateString() === today.toDateString();
+    const dayStr = isToday ? "Hoy" : "Mañana";
+    const timeStr = snap.time.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+    labelText = `${dayStr} · ${timeStr}`;
+  }
+  document.querySelectorAll(".ts-label").forEach((el) => (el.textContent = labelText));
+  document.querySelectorAll(".ts-input").forEach((el) => { if (+el.value !== offset) el.value = offset; });
+}
+
 const bs = document.getElementById("bs");
 
 // Init bottom sheet collapsed

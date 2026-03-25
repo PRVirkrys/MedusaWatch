@@ -121,10 +121,25 @@ function updateMarkers(bd) {
     const icon = createPulseIcon(risk.hex, i);
 
     const marker = L.marker([beach.lat, beach.lng], { icon })
-      .bindPopup(createPopupContent(beach, risk), { className: "ppop" })
+      .bindPopup(() => {
+        const currentBd = window._lastBD;
+        const current = currentBd ? currentBd.find((d) => d.beach === beach) : null;
+        return createPopupContent(beach, current ? current.risk : risk);
+      }, { className: "ppop" })
       .addTo(map);
 
     markers.push(marker);
+  });
+}
+
+function updateMarkerColors(bd) {
+  bd.forEach(({ risk }, i) => {
+    const marker = markers[i];
+    if (!marker || !marker._icon) return;
+    const dot = marker._icon.querySelector(".marker-dot");
+    const pulse = marker._icon.querySelector(".marker-pulse");
+    if (dot) dot.style.background = risk.hex;
+    if (pulse) pulse.style.background = risk.hex;
   });
 }
 
