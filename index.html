@@ -99,6 +99,15 @@
         <div class="love">
           <span>Para tu viaje, Zabi 💙</span><span class="love-sep">·</span><span>@ByPaulaRodas 💻✏️</span>
         </div>
+        <button class="fab-search" id="fabSearch" onclick="openMapSearch()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+        <div class="map-search" id="mapSearch">
+          <input type="text" class="map-search-input" id="searchMobile" placeholder="Buscar playa..." autocomplete="off" oninput="updateMapSearchResults(this.value)" />
+          <div class="map-search-results" id="mapSearchResults"></div>
+        </div>
       </div>
 
       <!-- DESKTOP PANEL -->
@@ -131,6 +140,9 @@
         </div>
         <div class="panel-head" style="padding-top: 10px">
           <div class="sec-title">Playas de Mallorca</div>
+        </div>
+        <div class="search-wrap">
+          <input type="text" class="search-input" id="searchDesktop" placeholder="Buscar playa..." autocomplete="off" oninput="filterBeaches(this.value, 'beachList')" />
         </div>
         <div class="beach-scroll">
           <div class="blist" id="beachList">
