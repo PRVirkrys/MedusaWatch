@@ -99,13 +99,31 @@
         <div class="love">
           <span>Para tu viaje, Zabi 💙</span><span class="love-sep">·</span><span>@ByPaulaRodas 💻✏️</span>
         </div>
-        <button class="fab-search" id="fabSearch" onclick="openMapSearch()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-        </button>
+        <div class="fab-row" id="fabRow">
+          <button class="fab-search" id="fabSearch" onclick="openMapSearch()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+          <button class="fab-search fab-forecast" id="fabForecast" onclick="toggleForecastPanel()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </button>
+        </div>
+        <div class="forecast-panel" id="forecastPanel">
+          <span class="fp-end-label">Ahora</span>
+          <div class="fp-track" id="fpTrack">
+            <input type="range" class="ts-input fp-slider" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
+            <div class="fp-tooltip" id="fpTooltip">Ahora</div>
+          </div>
+          <span class="fp-end-label">+24h</span>
+        </div>
         <div class="map-search" id="mapSearch">
-          <input type="text" class="map-search-input" id="searchMobile" placeholder="Buscar playa..." autocomplete="off" oninput="updateMapSearchResults(this.value)" />
+          <div class="map-search-row">
+            <input type="text" class="map-search-input" id="searchMobile" placeholder="Buscar playa..." autocomplete="off" oninput="updateMapSearchResults(this.value)" />
+            <button class="fab-search map-search-close" onclick="closeMapSearch()">✕</button>
+          </div>
           <div class="map-search-results" id="mapSearchResults"></div>
         </div>
       </div>
@@ -174,13 +192,6 @@
       <div class="bottom-sheet" id="bs">
         <div class="bs-handle" onclick="toggleBS()">
           <div class="bs-pill"></div>
-        </div>
-        <div class="ts-bar ts-bar-mobile">
-          <div class="ts-row">
-            <span class="ts-icon">🕐</span>
-            <span class="ts-label">Ahora</span>
-          </div>
-          <input type="range" class="ts-input" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
         </div>
         <div class="bs-tabs">
           <div

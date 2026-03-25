@@ -133,13 +133,16 @@ function updateMarkers(bd) {
 }
 
 function updateMarkerColors(bd) {
-  bd.forEach(({ risk }, i) => {
+  bd.forEach(({ beach, risk }, i) => {
     const marker = markers[i];
     if (!marker || !marker._icon) return;
     const dot = marker._icon.querySelector(".marker-dot");
     const pulse = marker._icon.querySelector(".marker-pulse");
     if (dot) dot.style.background = risk.hex;
     if (pulse) pulse.style.background = risk.hex;
+    if (marker.isPopupOpen()) {
+      marker.setPopupContent(createPopupContent(beach, risk));
+    }
   });
 }
 

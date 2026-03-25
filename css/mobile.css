@@ -1,11 +1,17 @@
 /* ── Map search overlay (mobile only) ───────────────────────────────────────── */
 
-.fab-search {
+.fab-row {
   display: none;
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 1000;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.fab-search {
+  display: flex;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -37,7 +43,19 @@
 
 .map-search.open {
   display: flex;
-  align-items: end;
+}
+
+.map-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 40px;
+}
+
+.map-search-close {
+  position: static;
+  flex-shrink: 0;
+  font-size: 16px;
 }
 
 .map-search-input {
@@ -49,7 +67,7 @@
   font-size: 13px;
   color: var(--text);
   outline: none;
-  width: calc(100% - 60px);
+  flex: 1;
   box-sizing: border-box;
   backdrop-filter: blur(8px);
   transition: border-color 0.15s;
@@ -70,7 +88,8 @@
   backdrop-filter: blur(8px);
   max-height: 260px;
   overflow-y: auto;
-  width: calc(100% - 60px);
+  width: calc(100% - 90px);
+  margin-left: 40px;
 }
 
 .msr-item {
@@ -126,14 +145,111 @@
   text-align: center;
 }
 
-/* ── Time slider mobile overrides ────────────────────────────────────────────── */
+/* ── Forecast FAB & vertical slider panel (mobile only) ──────────────────────── */
 
-.ts-bar-mobile {
-  padding: 8px 14px 32px;
+.fab-forecast {
+  font-size: 16px;
 }
 
-.ts-bar-mobile .ts-ticks {
+.forecast-panel {
   display: none;
+  position: absolute;
+  right: 10px;
+  top: 62px;
+  /* below the fab-row */
+  bottom: 72px;
+  /* above the ☰ FAB */
+  z-index: 999;
+  width: 52px;
+  background: rgba(6, 14, 28, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 10px;
+  gap: 6px;
+}
+
+.forecast-panel.open {
+  display: flex;
+}
+
+.fp-end-label {
+  font-size: 9px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.fp-track {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+}
+
+.fp-tooltip {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 10px;
+  transform: translateY(-50%);
+  background: rgba(6, 14, 28, 0.95);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--accent);
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+.fp-slider {
+  writing-mode: vertical-lr;
+  /* min=0 (Ahora) at top, max=23 (+24h) at bottom */
+  height: 100%;
+  width: 20px;
+  /* touch target */
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 200, 240, 0.5);
+}
+
+.fp-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px rgba(0, 200, 240, 0.5);
+}
+
+.fp-time-label {
+  font-size: 9px;
+  text-align: center;
+  line-height: 1.4;
+  padding: 0 4px;
+  word-break: break-word;
 }
 
 /* ── Bottom sheet (mobile only) ──────────────────────────────────────────────── */
@@ -247,7 +363,7 @@
     display: flex;
   }
 
-  .fab-search {
+  .fab-row {
     display: flex;
   }
 
@@ -261,5 +377,10 @@
 
   .love {
     bottom: 50px;
+  }
+
+  .ts-label {
+    flex: 0;
+    padding: 8px 0;
   }
 }

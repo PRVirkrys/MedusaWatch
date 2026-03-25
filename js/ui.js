@@ -55,6 +55,25 @@ function applyForecastHour(offset) {
   }
   document.querySelectorAll(".ts-label").forEach((el) => (el.textContent = labelText));
   document.querySelectorAll(".ts-input").forEach((el) => { if (+el.value !== offset) el.value = offset; });
+
+  // Update mobile tooltip text and position
+  const fpTooltip = document.getElementById("fpTooltip");
+  if (fpTooltip) {
+    fpTooltip.textContent = labelText;
+    updateFpTooltipPosition(offset);
+  }
+}
+
+function updateFpTooltipPosition(offset) {
+  const track = document.getElementById("fpTrack");
+  const tooltip = document.getElementById("fpTooltip");
+  if (!track || !tooltip) return;
+  const trackHeight = track.offsetHeight;
+  if (!trackHeight) return;
+  const thumbRadius = 10; // half of the 20px thumb
+  const ratio = offset / 23;
+  const thumbCenterY = thumbRadius + ratio * (trackHeight - thumbRadius * 2);
+  tooltip.style.top = thumbCenterY + "px";
 }
 
 const bs = document.getElementById("bs");
@@ -104,8 +123,42 @@ function switchTab(tab) {
   }
 }
 
+let forecastPanelOpen = false;
+
+function openForecastPanel() {
+  forecastPanelOpen = true;
+  document.getElementById("fabSearch").style.visibility = "hidden";
+  document.getElementById("fabForecast").innerHTML = "✕";
+  document.getElementById("forecastPanel").classList.add("open");
+  // Layout is computed after display:flex kicks in — read offsetHeight next frame
+  requestAnimationFrame(() => {
+    const offset = +(document.querySelector(".fp-slider")?.value || 0);
+    updateFpTooltipPosition(offset);
+  });
+}
+
+function closeForecastPanel() {
+  forecastPanelOpen = false;
+  document.getElementById("fabSearch").style.visibility = "";
+  document.getElementById("fabForecast").innerHTML =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+  document.getElementById("forecastPanel").classList.remove("open");
+}
+
+function toggleForecastPanel() {
+  if (forecastPanelOpen) {
+    closeForecastPanel();
+  } else {
+    if (document.getElementById("mapSearch").classList.contains("open")) {
+      closeMapSearch();
+    }
+    openForecastPanel();
+  }
+}
+
 function openMapSearch() {
-  document.getElementById("fabSearch").style.display = "none";
+  if (forecastPanelOpen) closeForecastPanel();
+  document.getElementById("fabRow").style.display = "none";
   document.getElementById("mapSearch").classList.add("open");
   document.getElementById("searchMobile").focus();
 }
@@ -116,7 +169,7 @@ function closeMapSearch() {
   searchMobile.value = "";
   searchMobile.blur();
   document.getElementById("mapSearchResults").replaceChildren();
-  document.getElementById("fabSearch").style.display = "";
+  document.getElementById("fabRow").style.display = "";
 }
 
 function updateMapSearchResults(query) {
@@ -181,6 +234,12 @@ if (_mapSearch) {
     e.stopPropagation();
     document.getElementById("searchMobile").blur();
   }, { passive: true });
+}
+
+const _forecastPanel = document.getElementById("forecastPanel");
+if (_forecastPanel) {
+  _forecastPanel.addEventListener("touchstart", (e) => e.stopPropagation());
+  _forecastPanel.addEventListener("touchmove", (e) => e.stopPropagation());
 }
 
 document.addEventListener("click", (e) => {
