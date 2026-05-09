@@ -32,9 +32,6 @@
       <div class="ltext">MEDUSAWATCH MALLORCA</div>
       <div class="lsub">Obteniendo datos de viento...</div>
       <div class="lbar"><div class="lprog"></div></div>
-     <div class="love">
-          <span>Para tu viaje, Zabi 💙</span><span class="love-sep">·</span><span>@ByPaulaRodas 💻✏️</span>
-        </div>
     </div>
 
     <!-- HEADER -->
@@ -46,6 +43,7 @@
           <p>Mallorca · Tiempo real</p>
         </div>
       </div>
+      <p class="header-desc">Riesgo de medusas en playas de Mallorca según el viento · Actualización cada 10 min</p>
       <div class="hright">
         <div class="upd-info">
           <div id="updTime">Actualizando...</div>
@@ -96,8 +94,10 @@
     <!-- MAIN -->
     <div class="main">
       <div id="map">
-        <div class="love">
-          <span>Para tu viaje, Zabi 💙</span><span class="love-sep">·</span><span>@ByPaulaRodas 💻✏️</span>
+        <div class="map-credit">@ByPaulaRodas</div>
+        <div id="errorBanner" class="error-banner" role="alert">
+          <span class="error-banner__icon">⚠</span>
+          <span>No se pudieron obtener los datos de viento. Comprueba tu conexión e inténtalo de nuevo.</span>
         </div>
         <div class="fab-row" id="fabRow">
           <button class="fab-search" id="fabSearch" onclick="openMapSearch()">
@@ -156,6 +156,7 @@
             </div>
           </div>
         </div>
+        <button class="about-link" onclick="openDisclaimer()">ℹ️ Sobre esta app</button>
         <div class="ts-bar">
           <div class="ts-row">
             <span class="ts-icon">🕐</span>
@@ -204,6 +205,9 @@
           <div class="bs-tab" id="tab-leyenda" onclick="switchTab('leyenda')">
             Leyenda
           </div>
+          <div class="bs-tab" id="tab-info" onclick="switchTab('info')">
+            Info
+          </div>
         </div>
         <div class="bs-content" id="bsContent">
           <div class="blist" id="beachListMobile">
@@ -223,6 +227,19 @@
 
       <!-- FAB -->
       <button class="fab" id="fab" onclick="toggleBS()">☰</button>
+    </div>
+
+    <!-- DISCLAIMER MODAL -->
+    <div id="disclaimerOverlay" class="disc-overlay">
+      <div class="disc-modal">
+        <div class="disc-title">Aviso importante</div>
+        <div class="disc-body">
+          <p>MedusaWatch estima el riesgo de presencia de medusas basándose en la dirección y velocidad del viento. No monitorea medusas directamente ni garantiza su ausencia o presencia en ninguna playa.</p>
+          <p>Los datos proceden de Open-Meteo API y OpenStreetMap. Esta herramienta es orientativa y no sustituye a los avisos oficiales de las autoridades locales.</p>
+          <p>Úsala como referencia, no como garantía. Bañarte es siempre tu responsabilidad.</p>
+        </div>
+        <button class="disc-btn" onclick="closeDisclaimer(true)">Entendido, continuar</button>
+      </div>
     </div>
 
     <script src="js/beaches.js"></script>

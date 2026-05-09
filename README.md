@@ -2,7 +2,7 @@
 
 Real-time jellyfish risk alerts for beaches in Mallorca, Spain. The app analyzes wind direction and speed relative to each beach's orientation to predict jellyfish presence and help beachgoers decide where to swim safely.
 
-**Live at:** [medusawatch.netlify.app](https://medusawatch.netlify.app) *(Netlify)*
+**Live at:** [prvirkrys.github.io/MedusaWatch](https://prvirkrys.github.io/MedusaWatch/) _(GitHub Pages)_
 
 ---
 
@@ -10,11 +10,11 @@ Real-time jellyfish risk alerts for beaches in Mallorca, Spain. The app analyzes
 
 Jellyfish are carried by ocean currents pushed by the wind. When the wind blows toward a beach, jellyfish are more likely to be pushed ashore. MedusaWatch calculates the angle between the current wind direction and each beach's exposure angle, then combines it with wind speed to produce a risk percentage.
 
-| Risk level | Color | Condition |
-|---|---|---|
-| Low | 🟢 Green | Wind blowing away from shore |
-| Moderate | 🟡 Yellow | Wind blowing laterally |
-| High | 🔴 Red | Wind blowing directly toward shore |
+| Risk level | Color     | Condition                          |
+| ---------- | --------- | ---------------------------------- |
+| Low        | 🟢 Green  | Wind blowing away from shore       |
+| Moderate   | 🟡 Yellow | Wind blowing laterally             |
+| High       | 🔴 Red    | Wind blowing directly toward shore |
 
 ---
 
@@ -26,19 +26,20 @@ Jellyfish are carried by ocean currents pushed by the wind. When the wind blows 
 - **Searchable beach list** — filter and jump to any beach instantly
 - **Responsive design** — desktop sidebar panel and mobile bottom sheet with search overlay
 - **Offline-friendly caching** — beach data is cached in localStorage for 24 hours to reduce API calls
+- **Disclaimer integrado** — aviso legal sobre el uso orientativo de los datos, con modal en primera visita y acceso permanente desde el panel y el menú mobile
 
 ---
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Vanilla JavaScript, HTML5, CSS3 |
-| Map | [Leaflet.js](https://leafletjs.com/) v1.9.4 + CartoDB Dark tiles |
-| Weather API | [Open-Meteo](https://open-meteo.com/) (free, no key needed) |
-| Beach data | [OpenStreetMap Overpass API](https://overpass-api.de/) |
-| Fonts | Google Fonts — Bebas Neue, DM Sans |
-| Hosting | Netlify |
+| Layer       | Technology                                                       |
+| ----------- | ---------------------------------------------------------------- |
+| Frontend    | Vanilla JavaScript, HTML5, CSS3                                  |
+| Map         | [Leaflet.js](https://leafletjs.com/) v1.9.4 + CartoDB Dark tiles |
+| Weather API | [Open-Meteo](https://open-meteo.com/) (free, no key needed)      |
+| Beach data  | [OpenStreetMap Overpass API](https://overpass-api.de/)           |
+| Fonts       | Google Fonts — Bebas Neue, DM Sans                               |
+| Hosting     | GitHubPages                                                      |
 
 No build step. No framework. No dependencies to install.
 
@@ -103,4 +104,10 @@ The risk percentage for each beach is calculated in `js/utils.js`:
 
 ---
 
-Made with 💙 by [@ByPaulaRodas](https://github.com/PRVirkrys) · *Para tu viaje, Zabi*
+## Legal
+
+MedusaWatch provides wind-based risk estimates only. It does not monitor jellyfish directly and does not guarantee their presence or absence at any beach. Data is provided for informational purposes and does not replace official local authority advisories.
+
+---
+
+Made with 💙 by [@ByPaulaRodas](https://github.com/PRVirkrys)

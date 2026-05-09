@@ -1,7 +1,31 @@
 let curDeg = 0,
   curSpeed = 0;
 
+function openDisclaimer() {
+  document.getElementById("disclaimerOverlay").classList.add("visible");
+}
+
+function closeDisclaimer(save) {
+  if (save) localStorage.setItem("medusawatch_disclaimer_v1", "accepted");
+  document.getElementById("disclaimerOverlay").classList.remove("visible");
+}
+
+function checkDisclaimer() {
+  if (localStorage.getItem("medusawatch_disclaimer_v1") !== "accepted") {
+    openDisclaimer();
+  }
+}
+
+function showErrorBanner() {
+  document.getElementById("errorBanner").classList.add("visible");
+}
+
+function hideErrorBanner() {
+  document.getElementById("errorBanner").classList.remove("visible");
+}
+
 async function loadData() {
+  hideErrorBanner();
   const btn = document.getElementById("btnRefresh");
   btn.disabled = true;
   const spinSpan = document.createElement("span");
@@ -13,11 +37,6 @@ async function loadData() {
       "https://api.open-meteo.com/v1/forecast?latitude=39.62&longitude=2.95&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,sea_surface_temperature&timezone=Europe%2FMadrid&forecast_days=2",
     );
     const d = await r.json();
-
-    const wt = d.hourly?.sea_surface_temperature?.[0];
-    document.getElementById("wTemp").textContent = wt
-      ? `${wt.toFixed(1)}°C`
-      : "~18°C";
 
     // Find the index in the hourly array that matches the current hour
     const now = new Date();
@@ -32,6 +51,11 @@ async function loadData() {
       );
     });
     if (currentHourIdx === -1) currentHourIdx = 0;
+
+    const wt = d.hourly?.sea_surface_temperature?.[currentHourIdx];
+    document.getElementById("wTemp").textContent = wt
+      ? `${wt.toFixed(1)}°C`
+      : "~18°C";
 
     // Pre-compute beach risks for each of the next 24 hours
     window._forecast = [];
@@ -59,10 +83,12 @@ async function loadData() {
     document.getElementById("updTime").textContent =
       new Date().toLocaleTimeString("es-ES");
     document.getElementById("loader").classList.add("out");
+    checkDisclaimer();
   } catch (e) {
     console.error(e);
     document.getElementById("loader").classList.add("out");
     document.getElementById("updTime").textContent = "Error";
+    showErrorBanner();
   }
   btn.disabled = false;
   btn.textContent = "↻ Actualizar";

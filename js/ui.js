@@ -107,6 +107,10 @@ function switchTab(tab) {
     .getElementById("tab-leyenda")
     .classList.toggle("active", tab === "leyenda");
 
+  document
+    .getElementById("tab-info")
+    .classList.toggle("active", tab === "info");
+
   const c = document.getElementById("bsContent");
   c.replaceChildren();
 
@@ -118,9 +122,21 @@ function switchTab(tab) {
     c.appendChild(list);
 
     if (window._lastBD) buildList(window._lastBD, "beachListMobile");
+  } else if (tab === "info") {
+    c.appendChild(createBsInfo());
   } else {
     c.appendChild(createBsLeg());
   }
+}
+
+function createBsInfo() {
+  const div = document.createElement("div");
+  div.className = "bs-info-content";
+  div.innerHTML =
+    "<p>MedusaWatch estima el riesgo de presencia de medusas basándose en la dirección y velocidad del viento. No monitorea medusas directamente ni garantiza su ausencia o presencia en ninguna playa.</p>" +
+    "<p>Los datos proceden de Open-Meteo API y OpenStreetMap. Esta herramienta es orientativa y no sustituye a los avisos oficiales de las autoridades locales.</p>" +
+    "<p>Úsala como referencia, no como garantía. Bañarte es siempre tu responsabilidad.</p>";
+  return div;
 }
 
 let forecastPanelOpen = false;
