@@ -43,7 +43,10 @@
           <p>Mallorca · Tiempo real</p>
         </div>
       </div>
-      <p class="header-desc">Riesgo de medusas en playas de Mallorca según el viento · Actualización cada 10 min</p>
+      <p class="header-desc">
+        Riesgo de medusas en playas de Mallorca según el viento · Actualización
+        cada 10 min
+      </p>
       <div class="hright">
         <div class="upd-info">
           <div id="updTime">Actualizando...</div>
@@ -94,35 +97,82 @@
     <!-- MAIN -->
     <div class="main">
       <div id="map">
-        <div class="map-credit"><a href="https://www.linkedin.com/in/paularodas/" target="_blank" rel="noopener noreferrer">@ByPaulaRodas</a></div>
+        Riesgo de medusas en playas de Mallorca según el viento · Actualización
+        cada 10 min
         <div id="errorBanner" class="error-banner" role="alert">
           <span class="error-banner__icon">⚠</span>
-          <span>No se pudieron obtener los datos de viento. Comprueba tu conexión e inténtalo de nuevo.</span>
+          <span
+            >No se pudieron obtener los datos de viento. Comprueba tu conexión e
+            inténtalo de nuevo.</span
+          >
         </div>
         <div class="fab-row" id="fabRow">
           <button class="fab-search" id="fabSearch" onclick="openMapSearch()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </button>
-          <button class="fab-search fab-forecast" id="fabForecast" onclick="toggleForecastPanel()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          <button
+            class="fab-search fab-forecast"
+            id="fabForecast"
+            onclick="toggleForecastPanel()"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
             </svg>
           </button>
         </div>
         <div class="forecast-panel" id="forecastPanel">
           <span class="fp-end-label">Ahora</span>
           <div class="fp-track" id="fpTrack">
-            <input type="range" class="ts-input fp-slider" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
+            <input
+              type="range"
+              class="ts-input fp-slider"
+              min="0"
+              max="23"
+              value="0"
+              oninput="applyForecastHour(+this.value)"
+            />
             <div class="fp-tooltip" id="fpTooltip">Ahora</div>
           </div>
           <span class="fp-end-label">+24h</span>
         </div>
         <div class="map-search" id="mapSearch">
           <div class="map-search-row">
-            <input type="text" class="map-search-input" id="searchMobile" placeholder="Buscar playa..." autocomplete="off" oninput="updateMapSearchResults(this.value)" />
-            <button class="fab-search map-search-close" onclick="closeMapSearch()">✕</button>
+            <input
+              type="text"
+              class="map-search-input"
+              id="searchMobile"
+              placeholder="Buscar playa..."
+              autocomplete="off"
+              oninput="updateMapSearchResults(this.value)"
+            />
+            <button
+              class="fab-search map-search-close"
+              onclick="closeMapSearch()"
+            >
+              ✕
+            </button>
           </div>
           <div class="map-search-results" id="mapSearchResults"></div>
         </div>
@@ -156,22 +206,39 @@
             </div>
           </div>
         </div>
-        <button class="about-link" onclick="openDisclaimer()">ℹ️ Sobre esta app</button>
+        <button class="about-link" onclick="openDisclaimer()">
+          ℹ️ Sobre esta app
+        </button>
         <div class="ts-bar">
           <div class="ts-row">
             <span class="ts-icon">🕐</span>
             <span class="ts-label">Ahora</span>
           </div>
-          <input type="range" class="ts-input" min="0" max="23" value="0" oninput="applyForecastHour(+this.value)" />
+          <input
+            type="range"
+            class="ts-input"
+            min="0"
+            max="23"
+            value="0"
+            oninput="applyForecastHour(+this.value)"
+          />
           <div class="ts-ticks">
-            <span>Ahora</span><span>+6h</span><span>+12h</span><span>+18h</span><span>+24h</span>
+            <span>Ahora</span><span>+6h</span><span>+12h</span><span>+18h</span
+            ><span>+24h</span>
           </div>
         </div>
         <div class="panel-head" style="padding-top: 10px">
           <div class="sec-title">Playas de Mallorca</div>
         </div>
         <div class="search-wrap">
-          <input type="text" class="search-input" id="searchDesktop" placeholder="Buscar playa..." autocomplete="off" oninput="filterBeaches(this.value, 'beachList')" />
+          <input
+            type="text"
+            class="search-input"
+            id="searchDesktop"
+            placeholder="Buscar playa..."
+            autocomplete="off"
+            oninput="filterBeaches(this.value, 'beachList')"
+          />
         </div>
         <div class="beach-scroll">
           <div class="blist" id="beachList">
@@ -234,11 +301,24 @@
       <div class="disc-modal">
         <div class="disc-title">Aviso importante</div>
         <div class="disc-body">
-          <p>MedusaWatch estima el riesgo de presencia de medusas basándose en la dirección y velocidad del viento. No monitorea medusas directamente ni garantiza su ausencia o presencia en ninguna playa.</p>
-          <p>Los datos proceden de Open-Meteo API y OpenStreetMap. Esta herramienta es orientativa y no sustituye a los avisos oficiales de las autoridades locales.</p>
-          <p>Úsala como referencia, no como garantía. Bañarte es siempre tu responsabilidad.</p>
+          <p>
+            MedusaWatch estima el riesgo de presencia de medusas basándose en la
+            dirección y velocidad del viento. No monitorea medusas directamente
+            ni garantiza su ausencia o presencia en ninguna playa.
+          </p>
+          <p>
+            Los datos proceden de Open-Meteo API y OpenStreetMap. Esta
+            herramienta es orientativa y no sustituye a los avisos oficiales de
+            las autoridades locales.
+          </p>
+          <p>
+            Úsala como referencia, no como garantía. Bañarte es siempre tu
+            responsabilidad.
+          </p>
         </div>
-        <button class="disc-btn" onclick="closeDisclaimer(true)">Entendido, continuar</button>
+        <button class="disc-btn" onclick="closeDisclaimer(true)">
+          Entendido, continuar
+        </button>
       </div>
     </div>
 
