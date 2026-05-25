@@ -10,10 +10,12 @@ function applyForecastHour(offset) {
   curSpeed = snap.speed;
 
   // Wind bar
-  document.getElementById("wDir").textContent = `${compass(snap.deg)} (${snap.deg}°)`;
+  document.getElementById("wDir").textContent =
+    `${compass(snap.deg)} (${snap.deg}°)`;
   document.getElementById("wSpeed").textContent = `${snap.speed} km/h`;
   document.getElementById("wGusts").textContent = `${snap.gusts} km/h`;
-  document.getElementById("wArrow").style.transform = `rotate(${snap.deg + 180}deg)`;
+  document.getElementById("wArrow").style.transform =
+    `rotate(${snap.deg + 180}deg)`;
 
   // Global risk badge + safe count
   const bd = snap.bd;
@@ -22,9 +24,16 @@ function applyForecastHour(offset) {
   document.getElementById("wSafe").textContent = `${safe}/${beaches.length}`;
 
   let rc, rt;
-  if (avg >= 60) { rc = "r-alto"; rt = "🔴 Alto riesgo"; }
-  else if (avg >= 30) { rc = "r-medio"; rt = "🟡 Moderado"; }
-  else { rc = "r-bajo"; rt = "🟢 Bajo riesgo"; }
+  if (avg >= 60) {
+    rc = "r-alto";
+    rt = "🔴 Alto riesgo";
+  } else if (avg >= 30) {
+    rc = "r-medio";
+    rt = "🟡 Moderado";
+  } else {
+    rc = "r-bajo";
+    rt = "🟢 Bajo riesgo";
+  }
   const badge = document.createElement("span");
   badge.className = `rbadge ${rc}`;
   badge.textContent = rt;
@@ -50,11 +59,18 @@ function applyForecastHour(offset) {
     const today = new Date();
     const isToday = snap.time.toDateString() === today.toDateString();
     const dayStr = isToday ? "Hoy" : "Mañana";
-    const timeStr = snap.time.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+    const timeStr = snap.time.toLocaleTimeString("es-ES", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     labelText = `${dayStr} · ${timeStr}`;
   }
-  document.querySelectorAll(".ts-label").forEach((el) => (el.textContent = labelText));
-  document.querySelectorAll(".ts-input").forEach((el) => { if (+el.value !== offset) el.value = offset; });
+  document
+    .querySelectorAll(".ts-label")
+    .forEach((el) => (el.textContent = labelText));
+  document.querySelectorAll(".ts-input").forEach((el) => {
+    if (+el.value !== offset) el.value = offset;
+  });
 
   // Update mobile tooltip text and position
   const fpTooltip = document.getElementById("fpTooltip");
@@ -79,20 +95,20 @@ function updateFpTooltipPosition(offset) {
 const bs = document.getElementById("bs");
 
 // Init bottom sheet collapsed
-bs.style.transform = "translateY(calc(100% - 44px))";
+bs.style.transform = "translateY(calc(100% - 60px))";
 
 function toggleBS() {
   bsOpen = !bsOpen;
   bs.style.transform = bsOpen
     ? "translateY(0)"
-    : "translateY(calc(100% - 44px))";
+    : "translateY(calc(100% - 60px))";
 
   document.getElementById("fab").textContent = bsOpen ? "✕" : "☰";
 }
 
 function collapseBS() {
   bsOpen = false;
-  bs.style.transform = "translateY(calc(100% - 44px))";
+  bs.style.transform = "translateY(calc(100% - 60px))";
   document.getElementById("fab").textContent = "☰";
 }
 
@@ -198,7 +214,7 @@ function updateMapSearchResults(query) {
   if (!q) return;
 
   const filtered = window._lastBD.filter(({ beach }) =>
-    beach.name.toLowerCase().includes(q)
+    beach.name.toLowerCase().includes(q),
   );
 
   if (filtered.length === 0) {
@@ -245,11 +261,17 @@ function updateMapSearchResults(query) {
 
 const _mapSearch = document.getElementById("mapSearch");
 if (_mapSearch) {
-  _mapSearch.addEventListener("touchstart", (e) => e.stopPropagation(), { passive: true });
-  _mapSearch.addEventListener("touchmove", (e) => {
-    e.stopPropagation();
-    document.getElementById("searchMobile").blur();
-  }, { passive: true });
+  _mapSearch.addEventListener("touchstart", (e) => e.stopPropagation(), {
+    passive: true,
+  });
+  _mapSearch.addEventListener(
+    "touchmove",
+    (e) => {
+      e.stopPropagation();
+      document.getElementById("searchMobile").blur();
+    },
+    { passive: true },
+  );
 }
 
 const _forecastPanel = document.getElementById("forecastPanel");
@@ -287,7 +309,8 @@ function filterBeaches(query, elId) {
 
   if (filtered.length === 0) {
     const empty = document.createElement("div");
-    empty.style.cssText = "color: var(--muted); font-size: 12px; padding: 16px; text-align: center;";
+    empty.style.cssText =
+      "color: var(--muted); font-size: 12px; padding: 16px; text-align: center;";
     empty.textContent = "Sin resultados";
     container.appendChild(empty);
     return;

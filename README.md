@@ -110,4 +110,4 @@ MedusaWatch provides wind-based risk estimates only. It does not monitor jellyfi
 
 ---
 
-Made with 💙 by [@ByPaulaRodas](https://github.com/PRVirkrys)
+Made with 💙 by [@ByPaulaRodas](https://github.com/PRVirkrys | https://www.linkedin.com/in/paularodas/)
