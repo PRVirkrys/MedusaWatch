@@ -18,9 +18,12 @@
 .leaflet-container {
   background: #05101e;
   /* background visible before tiles load */
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
 }
 
+.leaflet-container a {
+  color: var(--accent);
+}
 
 /* ─── 2. ZOOM CONTROLS ──────────────────────────────────────────────────────── */
 
@@ -40,7 +43,9 @@
   line-height: 30px !important;
   font-size: 16px !important;
   font-weight: 400;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .leaflet-bar a:hover {
@@ -136,7 +141,7 @@
   border: 1px solid rgba(0, 200, 240, 0.2);
   border-radius: 6px;
   color: #ddeeff;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-size: 11px;
   padding: 4px 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
