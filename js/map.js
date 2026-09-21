@@ -9,9 +9,12 @@ function initMap() {
     attributionControl: false,
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    maxZoom: 18,
-  }).addTo(map);
+  L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_3sft_1_cf78c937f13650b2ece67c73",
+    {
+      maxZoom: 18,
+    },
+  ).addTo(map);
 }
 
 function clearMarkers() {
@@ -121,11 +124,16 @@ function updateMarkers(bd) {
     const icon = createPulseIcon(risk.hex, i);
 
     const marker = L.marker([beach.lat, beach.lng], { icon })
-      .bindPopup(() => {
-        const currentBd = window._lastBD;
-        const current = currentBd ? currentBd.find((d) => d.beach === beach) : null;
-        return createPopupContent(beach, current ? current.risk : risk);
-      }, { className: "ppop" })
+      .bindPopup(
+        () => {
+          const currentBd = window._lastBD;
+          const current = currentBd
+            ? currentBd.find((d) => d.beach === beach)
+            : null;
+          return createPopupContent(beach, current ? current.risk : risk);
+        },
+        { className: "ppop" },
+      )
       .addTo(map);
 
     markers.push(marker);
