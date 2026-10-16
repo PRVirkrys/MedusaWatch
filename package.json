@@ -1,0 +1,8 @@
+{
+  "name": "medusawatch",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "update-beaches": "node scripts/update-beaches.mjs"
+  }
+}
