@@ -75,16 +75,25 @@ function parseOverpassResult(data) {
 }
 
 async function fetchFromOverpass() {
-  const res = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'data=' + encodeURIComponent(OVERPASS_QUERY)
-  });
-  if (!res.ok) throw new Error(`Overpass HTTP ${res.status}`);
-  const data = await res.json();
-  const parsed = parseOverpassResult(data);
-  if (parsed.length === 0) throw new Error('Overpass returned 0 beaches');
-  return parsed;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(OVERPASS_QUERY),
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`Overpass HTTP ${res.status}`);
+    const data = await res.json();
+    const parsed = parseOverpassResult(data);
+    if (parsed.length === 0) throw new Error('Overpass returned 0 beaches');
+    return parsed;
+  } catch (e) {
+    clearTimeout(timer);
+    throw e;
+  }
 }
 
 function getCached() {
@@ -107,14 +116,23 @@ function setCache(beachList) {
 async function loadBeaches() {
   const cached = getCached();
 
-  // Fresh cache — use it directly
-  if (cached && Date.now() - cached.timestamp < BEACHES_CACHE_TTL) {
-    console.log(`[MedusaWatch] Beaches from cache (${cached.beaches.length})`);
+  // Any cache (fresh or stale) → use it immediately, don't block startup
+  if (cached?.beaches?.length > 0) {
     beaches = cached.beaches;
+    const isFresh = Date.now() - cached.timestamp < BEACHES_CACHE_TTL;
+    if (isFresh) {
+      console.log(`[MedusaWatch] Beaches from cache (${beaches.length})`);
+      return beaches;
+    }
+    // Stale cache: return immediately, refresh in background
+    console.log(`[MedusaWatch] Stale cache — using it now, refreshing in background`);
+    fetchFromOverpass()
+      .then(fresh => { setCache(fresh); beaches = fresh; })
+      .catch(err => console.warn('[MedusaWatch] Background refresh failed:', err.message));
     return beaches;
   }
 
-  // Try Overpass API
+  // No cache at all — must fetch now (first visit)
   try {
     const fresh = await fetchFromOverpass();
     setCache(fresh);
@@ -123,13 +141,6 @@ async function loadBeaches() {
     return beaches;
   } catch (err) {
     console.warn('[MedusaWatch] Overpass failed:', err.message);
-  }
-
-  // Fallback: use expired cache rather than nothing
-  if (cached?.beaches?.length > 0) {
-    console.warn('[MedusaWatch] Using expired cache as fallback');
-    beaches = cached.beaches;
-    return beaches;
   }
 
   console.error('[MedusaWatch] No beach data available');
