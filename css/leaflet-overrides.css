@@ -17,8 +17,11 @@
 
 .leaflet-container {
   background: #05101e;
-  /* background visible before tiles load */
   font-family: "DM Sans", sans-serif;
+}
+
+.leaflet-tile-pane {
+  filter: hue-rotate(190deg) saturate(130%) brightness(92%);
 }
 
 .leaflet-container a {
