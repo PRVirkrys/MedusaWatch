@@ -22,6 +22,10 @@ function initMap() {
         '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> &middot; &copy; <a href="https://carto.com/attribution/" target="_blank" rel="noopener noreferrer">CARTO</a>',
     },
   ).addTo(map);
+
+  // Subtle blue tint to match the original CARTO dark_all tone
+  map.getPane("tilePane").style.filter =
+    "hue-rotate(190deg) saturate(130%) brightness(92%)";
 }
 
 function clearMarkers() {
