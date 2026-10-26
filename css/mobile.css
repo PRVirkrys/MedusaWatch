@@ -349,6 +349,10 @@
 /* ── Breakpoint ──────────────────────────────────────────────────────────────── */
 
 @media (max-width: 700px) {
+  .leaflet-bottom {
+    bottom: 64px;
+  }
+
   .main {
     position: relative;
   }

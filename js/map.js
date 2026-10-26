@@ -6,14 +6,20 @@ function initMap() {
     center: [39.62, 2.95],
     zoom: 10,
     zoomControl: true,
-    attributionControl: true,
+    attributionControl: false,
   });
+
+  L.control.attribution({ position: "bottomleft" }).addTo(map);
+  map.attributionControl.setPrefix(
+    '<a href="https://leafletjs.com" target="_blank" rel="noopener noreferrer">Leaflet</a>',
+  );
 
   L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_3sft_1_cf78c937f13650b2ece67c73",
     {
       maxZoom: 18,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · &copy; <a href="https://carto.com/attribution/">CARTO</a>',
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · &copy; <a href="https://carto.com/attribution/" target="_blank" rel="noopener noreferrer">CARTO</a>',
     },
   ).addTo(map);
 }
