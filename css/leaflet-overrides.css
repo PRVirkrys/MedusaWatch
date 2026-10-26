@@ -21,7 +21,8 @@
 }
 
 .leaflet-tile-pane {
-  filter: hue-rotate(15deg) saturate(130%) brightness(92%);
+  /* Shift map tiles toward the navy-cyan palette of the UI (--ocean / --accent) */
+  filter: hue-rotate(195deg) saturate(70%) brightness(85%);
 }
 
 .leaflet-container a {
