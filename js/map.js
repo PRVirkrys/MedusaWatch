@@ -14,15 +14,14 @@ function initMap() {
     '<a href="https://leafletjs.com" target="_blank" rel="noopener noreferrer">Leaflet</a>',
   );
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>',
-  }).addTo(map);
-
-  // Invert OSM tiles to dark style (no API key required)
-  map.getPane("tilePane").style.filter =
-    "invert(100%) hue-rotate(180deg) brightness(80%) contrast(100%) grayscale(75%)";
+  L.tileLayer(
+    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+    {
+      maxZoom: 20,
+      attribution:
+        '&copy; <a href="https://stadiamaps.com/" target="_blank" rel="noopener noreferrer">Stadia Maps</a> &middot; &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>',
+    },
+  ).addTo(map);
 }
 
 function clearMarkers() {
