@@ -20,6 +20,10 @@
   font-family: "DM Sans", sans-serif;
 }
 
+.leaflet-tile-pane {
+  filter: hue-rotate(15deg) saturate(130%) brightness(92%);
+}
+
 .leaflet-container a {
   color: var(--accent);
 }
