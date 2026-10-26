@@ -15,7 +15,7 @@ function initMap() {
   );
 
   L.tileLayer(
-    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=cb1_3sft_1_cf78c937f13650b2ece67c73",
+    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
     {
       maxZoom: 18,
       attribution:

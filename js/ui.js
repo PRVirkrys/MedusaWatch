@@ -152,7 +152,7 @@ function createBsInfo() {
     "<p>MedusaWatch estima el riesgo de presencia de medusas basándose en la dirección y velocidad del viento. No monitorea medusas directamente ni garantiza su ausencia o presencia en ninguna playa.</p>" +
     "<p>Los datos proceden de Open-Meteo API y OpenStreetMap. Esta herramienta es orientativa y no sustituye a los avisos oficiales de las autoridades locales.</p>" +
     "<p>Úsala como referencia, no como garantía. Bañarte es siempre tu responsabilidad.</p>" +
-    '<div class="map-credit"><a href="https://www.linkedin.com/in/paularodas/" target="_blank" rel="noopener noreferrer">@ByPaulaRodas</a></div>';
+    '<div class="site-credit site-credit--mobile"><a href="https://bypaularodas.com/?utm_source=medusawatch&amp;utm_medium=footer&amp;utm_campaign=medusawatch" target="_blank" rel="noopener noreferrer" aria-label="Paula Rodas: diseño y desarrollo">bypaularodas.com</a></div>';
   return div;
 }
 
