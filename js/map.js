@@ -14,14 +14,15 @@ function initMap() {
     '<a href="https://leafletjs.com" target="_blank" rel="noopener noreferrer">Leaflet</a>',
   );
 
-  L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    {
-      maxZoom: 16,
-      attribution:
-        'Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener noreferrer">Esri</a> &middot; &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>',
-    },
-  ).addTo(map);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>',
+  }).addTo(map);
+
+  // Invert OSM tiles to dark style (no API key required)
+  map.getPane("tilePane").style.filter =
+    "invert(100%) hue-rotate(180deg) brightness(80%) contrast(100%) grayscale(75%)";
 }
 
 function clearMarkers() {
